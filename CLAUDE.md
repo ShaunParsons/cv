@@ -11,6 +11,8 @@ those to produce a CV aimed at a specific role, rendered to PDF (for attaching
 to applications) and HTML (published to GitHub Pages at
 <https://shaunparsons.github.io/cv>).
 
+`qualifications.md` holds degrees, schooling and certifications.
+
 `cv.md` is generated output, not source. Do not hand-edit it.
 
 ## Build

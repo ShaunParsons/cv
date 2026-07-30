@@ -9,6 +9,7 @@ The rendered HTML is published at <https://shaunparsons.github.io/cv>.
 
 ```
 roles/*.md          one file per past role - a superset of any single CV
+qualifications.md   degrees, schooling, certifications
     │
     ▼               tailoring step: read a job spec, select and reframe
 cv.md               generated, not hand-written
@@ -30,7 +31,7 @@ publishable - this repo is public, so nothing candid goes in it.
 ## TODO
 
 - [x] `/add-role` skill for capturing roles
-- [ ] Capture the roles themselves
+- [x] Capture the roles themselves
 - [ ] Tailoring skill: job spec in, `cv.md` out
 - [ ] Add `style.css`
 - [ ] Add `Makefile` with `html` and `pdf` targets
