@@ -66,6 +66,20 @@ stylesheet honest across the whole toolchain. It is also useful to open in a
 browser while iterating, since it reloads faster than the PDF - but the PDF is
 the thing that gets sent.
 
+## Deciding whether to apply
+
+`/assess-fit [job spec]` runs before either build step and feeds neither. It
+holds one spec against `roles/*.md` and reports which requirements are met with
+evidence, which are not, how far through the process the application is likely
+to get, and what the offer would be worth. It reads the same sources as
+`/generate-cv` via the same `scripts/fetch_spec.py`, so the two see an identical
+spec.
+
+**It writes nothing to disk, by design.** The assessment names requirements that
+aren't met and carries salary figures, and both are barred from this repo - see
+Conventions below. It lives in the conversation and ends there; there is no
+report file and no gitignored sidecar, and neither should be added.
+
 ## Writing style
 
 The facts in `roles/*.md` don't change between CVs. What changes is which of
