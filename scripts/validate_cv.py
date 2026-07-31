@@ -39,15 +39,16 @@ EXPERIENCE_HEADING = re.compile(r"^professional experience$", re.I)
 
 @dataclass
 class Report:
+    path: str = "cv.md"
     errors: list[str] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
 
     def error(self, line: int | None, msg: str) -> None:
-        where = f"cv.md:{line}: " if line else ""
+        where = f"{self.path}:{line}: " if line else ""
         self.errors.append(f"{where}{msg}")
 
     def warn(self, line: int | None, msg: str) -> None:
-        where = f"cv.md:{line}: " if line else ""
+        where = f"{self.path}:{line}: " if line else ""
         self.warnings.append(f"{where}{msg}")
 
 
@@ -71,7 +72,7 @@ def split_front_matter(lines: list[str], rep: Report) -> tuple[dict[str, str], i
 
 
 def check(path: str) -> Report:
-    rep = Report()
+    rep = Report(path)
 
     try:
         with open(path, encoding="utf-8") as fh:
@@ -123,6 +124,22 @@ def check(path: str) -> Report:
 
         # Headings
         if stripped.startswith("#"):
+            # A heading needs a blank line above it. Without one, pandoc folds it
+            # into the paragraph or bullet before it as a lazy continuation line:
+            # the section never opens, the heading text appears mid-sentence, and
+            # everything under it is absorbed into the previous role. A fence or
+            # another heading closes the block, so only running text can swallow
+            # one.
+            if idx > start:
+                prev = lines[idx - 1].strip()
+                if prev and not prev.startswith((":::", "#")):
+                    rep.error(
+                        n,
+                        f"no blank line before '{stripped[:44]}'\n"
+                        "      pandoc folds it into the block above instead of "
+                        "starting a section",
+                    )
+
             level = len(stripped) - len(stripped.lstrip("#"))
             text = stripped[level:].strip()
 
