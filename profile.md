@@ -31,6 +31,19 @@ role file behind it. This is that file.
   - Why it matters: a spec weighted either way has real evidence behind it, so
     the register does the work rather than the summary hedging across both
 
+- **Located in the Midlands, and open to London on a hybrid basis or to fully
+  remote work.** `#direction`
+  - In scope on site: Leicester, Nottingham, Birmingham and Derby
+  - London: workable hybrid, commuting in for a set number of days a week -
+    three is fine
+  - Fully remote: in scope. Talis Education was office-based in Birmingham
+    initially and remote from the pandemic onwards, so four years of it is
+    evidenced rather than aspirational
+  - Why it matters: an on-site requirement is a hard filter, and a failed hard
+    filter ends an application whatever else is true. Knowing the answer up
+    front decides which specs are worth assessing at all
+  - On the CV: not a line worth a slot. The heading already carries the city
+
 ## Tooling
 
 The working environment rather than any one role's stack, which is why it lives
@@ -73,6 +86,28 @@ achievements are strong enough that dressing them draws attention to the
 dressing, and a reader who has seen a hundred CVs reads the emphatic word as
 padding.
 
+Shape matters as much as word choice, and the summary is where it goes wrong
+first, because it is the one paragraph asked to carry three achievements at
+once:
+
+- **Give parallel facts parallel grammar.** Three things done are three matched
+  verbs - *led* the rollout, *wrote* the Terraform, *owned* incident management.
+  Joining two with "and" and hanging the third off "alongside" or "as well as"
+  makes the third read as an afterthought whatever its actual weight, and the
+  third is usually the one that matters.
+- **Don't bolt a clause onto a finished sentence.** "...alongside the Terraform
+  and AWS CDK the platform's infrastructure was defined in" arrives after the
+  sentence has already closed, and strands its preposition getting there. A fact
+  that needs saying gets its own slot in the series or its own sentence.
+- **Don't reach for the aphorism.** "...were procurement questions before they
+  were engineering ones" has the shape of an insight rather than the substance
+  of one. This is the emphatic-word rule again, and it bites harder: a clever
+  construction is more conspicuous than a clever adjective, so the reader ends
+  up watching the sentence work instead of reading the fact.
+- **One claim per clause, and stop when the claim is made.** Where a sentence is
+  carrying three subordinate ideas it is two sentences, or it is one sentence
+  and a bullet that should have kept the rest.
+
 ## Contact
 
 The email address is `cv@shaunparsons.co.uk` and is publishable; it is hardcoded
@@ -97,6 +132,5 @@ this repo** - they are environment variables read at render time. See `CLAUDE.md
   draw on where a spec asks for them - the 300 million row figure is the hardest
   number in the early history. They are simply not something to volunteer as a
   direction of travel.
-- **Still to capture:** location and remote requirements, notice period, and
-  whether the next role should be IC or leadership. All three shape the summary,
-  so this file gets better as they firm up.
+- **Still to capture:** notice period, and whether the next role should be IC or
+  leadership. Both shape the summary, so this file gets better as they firm up.

@@ -86,7 +86,7 @@ The facts in `roles/*.md` don't change between CVs. What changes is which of
 them lead, and the register they're written in. Below are the registers. Pick
 one from the job spec; when called bare, use **General**.
 
-Two rules hold across all of them:
+Three rules hold across all of them:
 
 - **Two pages, always.** Not two and a bit. `make` renders A4 and
   `pdfinfo dist/cv.pdf` is the arbiter. Fitting is a writing problem, not a
@@ -95,6 +95,11 @@ Two rules hold across all of them:
   line instead of two.
 - **Every bullet earns its line.** A bullet that could sit on any engineer's CV
   is taking space from one that couldn't.
+- **Parallel facts get parallel grammar.** Where one sentence carries several
+  achievements, they take the same shape - matched verbs in a series, not two
+  joined by "and" with a third hung off "alongside". The construction rules
+  under `## Voice` in `profile.md` are written for the summary but govern every
+  line on the page.
 
 ### General
 
