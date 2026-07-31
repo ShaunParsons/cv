@@ -244,6 +244,17 @@ is the clearest evidence in the history of what the promotion was for.
   - Emphasise for: platform, DevOps, infrastructure, cloud networking, and any
     spec naming Terraform specifically
 
+- **Took the platform multi-region when US customers wanted their data held
+  locally** `#devops` `#architecture`
+  - Context: a multi-tenanted SaaS platform serving universities, with tenants
+    sharing the platform and isolation enforced in the application and data
+    layers. The multi-tenancy was in place before I joined
+  - Driver: customers in the US region wanted their data held locally; serving
+    those users from a nearer region also cut latency
+  - Contribution: built and owned the multi-region deployment
+  - Emphasise for: platform, DevOps, infrastructure, and any spec naming
+    multi-region deployment, data residency or multi-tenancy
+
 - **Conducted candidate interviews throughout the role** `#hiring`
   - Emphasise for: engineering management, hiring-involved IC roles
 
@@ -276,6 +287,10 @@ is the clearest evidence in the history of what the promotion was for.
   (php-resque) on the inherited extraction service, both migrated away from
 - **Cloud and orchestration:** AWS, serverless, Kubernetes, microservices; EC2
   instances on the inherited stack, replaced by a serverless workflow
+- **Platform shape:** a multi-tenanted SaaS platform, tenants sharing the
+  platform with isolation enforced in the application and data layers, deployed
+  across multiple AWS regions. The multi-tenancy predated me; the multi-region
+  deployment was mine to build and own
 - **Document processing:** text extraction from PDF with coordinate data;
   normalisation of docx and EPUB to PDF via an external conversion API
 - **Infrastructure as code:** AWS CDK (introduced during the role) as the
@@ -327,7 +342,8 @@ gone without active development, and any throughput or corpus figures for it.
   depth translated for a non-engineering audience, against international
   university procurement, which few backend CVs carry
 - **Domain keywords:** higher education, edtech, tender response, disaster
-  recovery, data residency, data sovereignty, compliance
+  recovery, data residency, data sovereignty, compliance, multi-region,
+  multi-tenancy
 - **Note:** this is the longest role at 4 years 7 months and carries most of the
   leadership evidence
 - **Both AWS certifications were earned during this role** (2023, now expired).
