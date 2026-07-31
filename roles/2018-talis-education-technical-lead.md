@@ -244,6 +244,21 @@ is the clearest evidence in the history of what the promotion was for.
   - Emphasise for: platform, DevOps, infrastructure, cloud networking, and any
     spec naming Terraform specifically
 
+- **Ran MongoDB self-managed on EC2, replicated across availability zones**
+  `#devops` `#data` `#architecture`
+  - What: MongoDB on EC2 instances rather than a managed database service,
+    operated as a replicated cluster
+  - Reliability: read-write replicas distributed across multiple availability
+    zones, so no single zone held the datastore
+  - Performance: read replicas alongside them, carrying read traffic off the
+    write path
+  - End state: still self-managed on EC2 in April 2023, at the end of the
+    tenure - it was not migrated onto a managed service
+  - Contribution: my team's to build and operate. I led that team and worked in
+    the cluster, rather than standing the topology up single-handed
+  - Emphasise for: platform, SRE, infrastructure, and any spec drawing a line
+    between databases operated and databases consumed
+
 - **Took the platform multi-region when US customers wanted their data held
   locally** `#devops` `#architecture`
   - Context: a multi-tenanted SaaS platform serving universities, with tenants
@@ -286,7 +301,8 @@ is the clearest evidence in the history of what the promotion was for.
 - **Frameworks and job processing:** Fat-Free Framework (F3) and Resque
   (php-resque) on the inherited extraction service, both migrated away from
 - **Cloud and orchestration:** AWS, serverless, Kubernetes, microservices; EC2
-  instances on the inherited stack, replaced by a serverless workflow
+  instances on the inherited stack, where the Resque workers were replaced by a
+  serverless workflow and the MongoDB cluster stayed on EC2 throughout
 - **Platform shape:** a multi-tenanted SaaS platform, tenants sharing the
   platform with isolation enforced in the application and data layers, deployed
   across multiple AWS regions. The multi-tenancy predated me; the multi-region
@@ -298,7 +314,9 @@ is the clearest evidence in the history of what the promotion was for.
   the estate-wide resources - IAM and other global resources, VPC and VPN
   configuration, subnets, and legacy data stores including S3; Ansible and
   Puppet deprecated
-- **Datastores:** MongoDB, DocumentDB, DynamoDB, SQL databases
+- **Datastores:** MongoDB - self-managed on EC2 as a replicated cluster spanning
+  availability zones, with read replicas, rather than a managed service -
+  alongside DocumentDB, DynamoDB and SQL databases
 - **Testing:** Jest for Node.js
 - **CI/CD:** CircleCI for continuous integration; deployment run through Hubot
   in Slack - ChatOps rather than continuous deployment
@@ -348,6 +366,14 @@ gone without active development, and any throughput or corpus figures for it.
   buys nothing, and the Terraform bullet already says which resources stayed
   where. Bring the deprecation forward only for a spec naming Ansible or Puppet,
   or one asking about consolidating a mixed IaC estate
+- **The MongoDB cluster is the evidence for "operated, not consumed".** Platform
+  and persistence specs increasingly draw that line in as many words, and
+  DocumentDB and DynamoDB sit on the wrong side of it. Self-managed replicas on
+  EC2, spanning availability zones, sit on the right side. Bring it forward for
+  any spec naming distributed databases, replication, self-managed persistence
+  or high availability at the data layer; leave it off where the datastore is
+  incidental to the role. The attribution is shared, and the bullet says so -
+  the team built and ran it, and I led the team
 - **Leads for leadership roles:** incident review process and developer
   promotions
 - **Leads for client-facing or pre-sales roles:** the tender work - technical
