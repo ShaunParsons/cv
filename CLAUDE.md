@@ -89,6 +89,30 @@ building and leading: enough hands-on detail to be credible as an engineer,
 enough scope to be credible as a lead. Broad technology coverage rather than
 depth in one stack. This is what `/generate-cv` produces bare.
 
+It is aimed at a technical role somewhere between senior developer and technical
+lead, because that band is where a vague spec most often lands. That is the
+selection test, and it matters more here than in any other register: the role
+files are a superset and each holds far more than fits, so a bullet does not
+earn a slot by being true or by being an achievement. It earns one by being
+evidence for *that* band, and by beating every other bullet competing for the
+same line.
+
+Applied in practice:
+
+- **Prefer the bullet that carries a number, a named technology or a named
+  consequence** over the one that carries a responsibility. "Owned incident
+  management" is a job description; the 24x7 rota across ten developers and
+  99.99% is evidence.
+- **Where several bullets in a role file describe one arc, tell the arc as one
+  bullet** and spend the space saved elsewhere. Four lines about the extraction
+  service crowd out three other roles; one line saying picked up stale, extended,
+  migrated says the same thing and leaves them room.
+- **Cut what aims past the band.** Tenders, procurement, cross-business
+  stakeholder work and commercial range are strong in the founder and project
+  management registers and are ballast here.
+- **Cut what any competent engineer would also have.** Conducting interviews,
+  attending tech talks, using a testing framework - true, and true of everyone.
+
 ### Senior developer
 
 Weighted to building. Lead every role with what was built and what it was built

@@ -45,6 +45,33 @@ subject does not.
   - Strength: recent, hands-on and well evidenced - the interest and the work
     are the same thing here, which is why it is worth stating outright
 
+## Tooling
+
+The working environment rather than any one role's stack, which is why it lives
+here and not in a `roles/*.md` technical surface. It spans every role in the
+history and predates the earliest of them, so attaching it to one would
+understate it.
+
+- **Linux, on Ubuntu since 2005** `#platform`
+  - Span: a daily driver from 2005 onwards - the first year it was available to
+    me - which is longer than the whole commercial history in `roles/`
+  - Why it matters: this is not a line most engineering CVs can carry, and it is
+    what the Kubernetes, Docker, Bash and DevOps claims elsewhere rest on. It
+    reads as a platform person by default rather than by retraining
+  - Wording: state it as *since 2005*, never as a year count. A count needs
+    editing every January and invites arithmetic on the reader's part; a date is
+    checkable, self-updating and stronger
+
+- **Vim, tmux and Git** `#platform`
+  - What: Vim as the editor, tmux for session and pane management, Git for
+    version control - across all of the above
+  - On Git: near-universal, and on its own it earns nothing. It is worth a slot
+    only as part of this group, where the point being made is the environment
+    as a whole rather than any one tool in it
+  - On Vim and tmux: they pair on the CV as one item. Separately they are two
+    editor-preference lines; together they describe a terminal-first way of
+    working, which is the thing actually worth saying
+
 ## Voice
 
 The opening of the summary, in my own words rather than a paraphrase:

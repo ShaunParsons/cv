@@ -25,20 +25,99 @@ commitment:
 
 ## Mandate
 
-Initially tasked with reviving an existing microservice. That service went on to
-form a key part of the company's existing products and its upcoming product
-ideas.
+Brought in to take an existing microservice back into active development after a
+period without any. Written in PHP on the Fat-Free Framework (F3) - a niche
+choice - and left to go stale. That service went on to form a key part of the
+company's existing products and its upcoming product ideas.
 
 ## Achievements
 
-- **Migrated a critical service off an unsupported PHP framework to serverless
-  AWS** `#architecture` `#devops` `#cost`
+The first four all concern the same service - the document extraction
+microservice behind the e-book reader product - and run in order. Picked up
+stale, grown, debugged, then migrated off the framework it was written on. Taken
+together they span the Senior Developer years and the Technical Lead ones, which
+is the clearest evidence in the history of what the promotion was for.
+
+- **Took a stale microservice back into active development, and grew a team
+  around it** `#delivery` `#architecture`
+  - Context: already deployed and one of the core technologies behind an e-book
+    reader product, but left without active development
+  - Stack as found: PHP on the Fat-Free Framework (F3), Resque workers on EC2
+    instances, MongoDB
+  - What: brought the project back into active development, extended the
+    existing feature set and fixed outstanding bugs
+  - Scale: sole developer on it at the outset, supported by another senior
+    developer whose own focus was a different microservice. By the time I left,
+    four developers had worked on it
+  - Contribution: the originating engineer on the service, from the first day
+  - Era: began September 2018, as Senior Developer
+  - Emphasise for: backend, roles naming legacy or inherited systems, evidence
+    of ownership from an IC seat
+
+- **Built text extraction with coordinate data, so another team could ship
+  highlighting** `#architecture` `#data`
+  - What: extracted text from documents along with the coordinate data
+    describing where on the page it sat, which is what let a front-end service
+    built by a different team render text highlighting
+  - Pipeline: documents normalised to PDF before extraction, so one extractor
+    served every input format rather than one per format
+  - Conversion: docx and EPUB to PDF handled by an external API provider, not
+    built in house
+  - Cross-team: specced the API with the front-end team who consumed it
+  - Contribution: built the extraction; the conversion was a third-party service
+  - Emphasise for: backend, API and interface design, cross-team delivery,
+    document processing
+
+- **Found and fixed a concurrency bug that was silently losing data**
+  `#data` `#architecture`
+  - Symptom: updates being overwritten or deleted by other workers running
+    concurrently
+  - Cause: a worker read the entire state of a MongoDB record, modified it, and
+    wrote the whole thing back - so two workers touching the same record
+    clobbered each other
+  - Fix: atomic field-level updates in place of read-modify-write, so a worker
+    sets only what it owns
+  - Contribution: the debugging and the fix were mine
+  - Emphasise for: backend, distributed systems, data integrity, roles naming
+    debugging or production support
+
+- **Migrated that service off an unsupported PHP framework to a serverless
+  workflow** `#architecture` `#devops` `#cost`
+  - From: PHP on F3, with Resque workers on EC2 instances
+  - To: a serverless workflow on AWS
+  - Drivers: higher throughput, lower operating cost, dynamic scaling, and
+    getting off a framework that was no longer actively supported
   - Outcome: improved throughput of the service while reducing operating costs
   - Scale: multiple developers onboarded onto the work over time
   - Note: the actual cost savings are not available
   - Contribution: designed the migration personally; multiple developers
     implemented it under that design
   - Emphasise for: backend, platform, architecture, modernisation
+
+- **Ran the team's agile ceremonies for a year before holding the title**
+  `#leadership` `#delivery`
+  - Period: roughly March 2019 to March 2020, while still a Senior Developer
+  - What: led the daily stand-ups, and the weekly and bi-weekly sprint planning
+    and sprint review meetings
+  - Supervision: initially run under my manager, the CTO
+  - Team: included developers considerably more experienced than I was at the
+    time, whose guidance I drew on where it helped
+  - Contribution: mine to run day to day; the oversight was the CTO's
+  - Why it matters: this is the year immediately preceding the promotion to
+    Technical Lead, and it was leadership taken on from an IC seat rather than
+    conferred with a title
+  - Emphasise for: team lead, engineering management, and any spec asking for
+    evidence of operating above the current level
+
+- **Wrote and reviewed architectural decision records** `#architecture`
+  - Context: ADRs were introduced by a member of the front-end team, not by me
+  - What: wrote numerous ADRs across the extraction service and other projects,
+    and reviewed ADRs written by others
+  - Use: the extraction API was specced with the front-end team this way
+  - Contribution: authoring and review; the practice was someone else's to
+    introduce
+  - Emphasise for: architecture, staff+ IC, roles naming design documentation or
+    RFC culture
 
 - **Achieved 99.99% uptime across the estate** `#devops`
   - Metric: 99.99% over the final 12 month period
@@ -76,9 +155,20 @@ ideas.
 
 - **Helped developers gain promotions and meet their career goals**
   `#leadership` `#mentoring`
-  - How: worked to an internal framework, creating opportunities for people to
-    showcase skills they had not previously been able to display
-  - Metric: two developers promoted
+  - Framework: a developer role checklist that already existed when I arrived,
+    setting out every level from junior developer through developer and senior
+    developer to technical lead, and the attributes the company expected at
+    each. It gave people a way to evidence that they had met a level
+  - How: worked through the checklist with each person in one-to-ones to
+    establish what they still had to demonstrate, then made sure sprint planning
+    put work in front of them where they could demonstrate exactly that. The
+    framework drove what people were given to do, rather than only being an
+    assessment at review time
+  - Metric: two promotions - one junior developer to developer, and one
+    developer to senior developer, each within about a year of that person
+    joining the company
+  - Contribution: the framework was the company's; using it to route work, and
+    pushing both cases forward, was mine
   - Emphasise for: engineering management, staff+ IC, team lead
 
 - **Upskilled the wider development team on Kubernetes and serverless**
@@ -93,10 +183,42 @@ ideas.
   - Emphasise for: staff+ IC, platform advocacy - evidence of contributing to an
     established learning culture
 
-- **Improved developer experience and onboarding** `#delivery` `#mentoring`
-  - What: increased developer productivity by automating repetitive tasks
-  - Concrete output: a set of internal CLI tools written in Bash
-  - Emphasise for: platform, developer experience, engineering management
+- **Cut local environment setup from days to hours, and made shipping on day
+  one real** `#delivery` `#devops` `#mentoring`
+  - The argument: that a developer should be able to commit, get reviewed,
+    merge and release to production on their first day of work. I pushed this
+    consistently as the standard onboarding should be held to
+  - Before: a couple of days to get a local environment working, at the point I
+    joined in September 2018
+  - After: a matter of hours by the time I left, most of it spent waiting for
+    Docker images to download
+  - How: Docker adopted for local development, and a CLI tools repo that stood
+    the entire stack up locally with a single command
+  - Outcome: several developers, including members of my own team, shipped to
+    production within their first day
+  - Contribution: the case for the standard was mine, as was starting the CLI
+    tooling behind it (below). Getting to a first-day release took a lot of
+    moving parts and was not mine alone
+  - Emphasise for: platform, developer experience, engineering management,
+    roles naming onboarding or time-to-first-commit
+
+- **Started the internal CLI tooling, then deliberately handed it to the team**
+  `#delivery` `#devops` `#mentoring`
+  - Origin: individual bash scripts were being passed from developer to
+    developer as people joined. Consolidated them into a single repo with a
+    structure that made them easy to share and extend
+  - Contribution: the idea for a suite of tools was mine, as were the first
+    couple of tools in the repo
+  - Adoption: presented the tools and their uses to the whole tech team, then
+    left it open for developers to add their own as they saw fit - which they
+    did, and it grew organically from there
+  - Later: once the project was well established, tooling was built inside
+    sprints as part of the Kubernetes migration, so the tooling for the new
+    platform existed from the day the platform did
+  - Why it matters: seeded rather than owned. Distributing the ownership on
+    purpose is why it kept growing without me
+  - Emphasise for: platform, developer experience, staff+ IC, internal tooling,
+    roles naming developer productivity
 
 - **Introduced AWS CDK and built an internal constructs library** `#devops`
   `#architecture`
@@ -137,15 +259,23 @@ ideas.
 
 - **Languages:** Node.js, TypeScript, Bash, PHP (legacy, being migrated away
   from)
-- **Cloud and orchestration:** AWS, serverless, Kubernetes, microservices
+- **Frameworks and job processing:** Fat-Free Framework (F3) and Resque
+  (php-resque) on the inherited extraction service, both migrated away from
+- **Cloud and orchestration:** AWS, serverless, Kubernetes, microservices; EC2
+  instances on the inherited stack, replaced by a serverless workflow
+- **Document processing:** text extraction from PDF with coordinate data;
+  normalisation of docx and EPUB to PDF via an external conversion API
 - **Infrastructure as code:** AWS CDK (introduced during the role); previously
   Terraform, Ansible, Puppet
 - **Datastores:** MongoDB, DocumentDB, DynamoDB, SQL databases
-- **CI/CD:** CircleCI for continuous integration; deployment run through a Slack
-  chatbot - ChatOps rather than continuous deployment
+- **Testing:** Jest for Node.js
+- **CI/CD:** CircleCI for continuous integration; deployment run through Hubot
+  in Slack - ChatOps rather than continuous deployment
 - **Observability:** CloudWatch and Grafana for metrics and dashboards;
   PagerDuty for alerting and paging, wired into provisioned infrastructure by
   default via the internal CDK constructs
+- **Local development:** Docker, with a CLI tools repo bringing the whole stack
+  up locally in one command
 - **Tooling:** a set of internal CLI tools for developer productivity, written
   in Bash; an internal AWS CDK constructs library for standardised
   infrastructure patterns
@@ -154,13 +284,22 @@ ideas.
 
 **Scope:** a back-end and platform role throughout - no front-end development.
 
-**Figures not available:** interviews conducted, incident volumes, and the cost
-saving on the PHP to serverless migration.
+**Figures not available:** interviews conducted, incident volumes, the cost
+saving on the PHP to serverless migration, how long the extraction service had
+gone without active development, and any throughput or corpus figures for it.
 
 ## Tailoring notes
 
-- **Leads for hands-on roles:** the PHP → serverless migration and the
-  Kubernetes work
+- **Leads for hands-on roles:** the extraction service arc - picked up stale,
+  extended, debugged, then migrated off F3 to serverless. Told end to end it is
+  the strongest hands-on evidence in the history, and the concurrency fix is the
+  most technically specific thing in it. The Kubernetes work follows
+- **The Senior Developer years carry two things, not one.** September 2018 to
+  March 2020 is sole-developer ownership of a service another team's product
+  depended on, and - from around March 2019 - running the team's ceremonies a
+  full year before the title arrived. A CV showing only the Technical Lead work
+  leaves eighteen months looking empty and makes the promotion look unearned,
+  when in fact the year before it is where the case for it was made
 - **Leads for leadership roles:** incident review process and developer
   promotions
 - **Leads for client-facing or pre-sales roles:** the tender work - technical
