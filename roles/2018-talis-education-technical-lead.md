@@ -297,12 +297,15 @@ gone without active development, and any throughput or corpus figures for it.
   extended, debugged, then migrated off F3 to serverless. Told end to end it is
   the strongest hands-on evidence in the history, and the concurrency fix is the
   most technically specific thing in it. The Kubernetes work follows
-- **The Senior Developer years carry two things, not one.** September 2018 to
-  March 2020 is sole-developer ownership of a service another team's product
-  depended on, and - from around March 2019 - running the team's ceremonies a
-  full year before the title arrived. A CV showing only the Technical Lead work
-  leaves eighteen months looking empty and makes the promotion look unearned,
-  when in fact the year before it is where the case for it was made
+- **The CV states the final title only: Technical Lead, for the whole tenure.**
+  The `title_history` above is the record; a CV heading does not need to
+  narrate the promotion
+- **The work from the Senior Developer years still goes on the CV**, just
+  without being labelled by the title held at the time. September 2018 to March
+  2020 is sole-developer ownership of a service another team's product depended
+  on, and - from around March 2019 - running the team's ceremonies. Both are
+  among the strongest evidence in the role and neither depends on the title to
+  land
 - **Leads for leadership roles:** incident review process and developer
   promotions
 - **Leads for client-facing or pre-sales roles:** the tender work - technical
