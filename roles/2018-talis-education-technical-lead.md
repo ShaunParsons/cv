@@ -223,8 +223,8 @@ is the clearest evidence in the history of what the promotion was for.
 - **Introduced AWS CDK and built an internal constructs library** `#devops`
   `#architecture`
   - Context: the estate used Terraform, Ansible and Puppet. CDK became the
-    default for new infrastructure; Ansible and Puppet were deprecated, and
-    Terraform stayed in place for IAM user management
+    default for new infrastructure and Ansible and Puppet were deprecated;
+    Terraform stayed in place for the estate-wide resources described below
   - What: beyond adopting CDK, built an own constructs library to standardise
     common patterns - for example SQS queues provisioned with dead letter
     queues and automatic alerting into PagerDuty as a single construct
@@ -232,6 +232,17 @@ is the clearest evidence in the history of what the promotion was for.
     easy thing for every other engineer, rather than just picking a tool
   - Contribution: team adoption, own constructs library
   - Emphasise for: platform, DevOps, infrastructure, developer experience
+
+- **Provisioned the estate's global and networking infrastructure in
+  Terraform** `#devops` `#architecture`
+  - Scope: predominantly global resources - IAM chief among them - alongside
+    VPC and VPN configuration, subnets, and legacy data stores including S3
+  - Why Terraform rather than CDK: these are the estate-wide resources that sit
+    underneath and across every service, so they stayed in the tool that
+    already held them while CDK took new per-service infrastructure
+  - Contribution: wrote and owned the Terraform for these resources
+  - Emphasise for: platform, DevOps, infrastructure, cloud networking, and any
+    spec naming Terraform specifically
 
 - **Conducted candidate interviews throughout the role** `#hiring`
   - Emphasise for: engineering management, hiring-involved IC roles
@@ -268,8 +279,10 @@ is the clearest evidence in the history of what the promotion was for.
 - **Document processing:** text extraction from PDF with coordinate data;
   normalisation of docx and EPUB to PDF via an external conversion API
 - **Infrastructure as code:** AWS CDK (introduced during the role) as the
-  default for new infrastructure, alongside Terraform, which was retained for
-  IAM user management; Ansible and Puppet deprecated
+  default for new per-service infrastructure, alongside Terraform, which held
+  the estate-wide resources - IAM and other global resources, VPC and VPN
+  configuration, subnets, and legacy data stores including S3; Ansible and
+  Puppet deprecated
 - **Datastores:** MongoDB, DocumentDB, DynamoDB, SQL databases
 - **Testing:** Jest for Node.js
 - **CI/CD:** CircleCI for continuous integration; deployment run through Hubot
