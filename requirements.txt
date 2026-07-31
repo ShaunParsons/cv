@@ -1,0 +1,7 @@
+# Render-time dependencies. pandoc is a system package, not a Python one -
+# see `make setup`.
+weasyprint>=66
+
+# scripts/make_oblique.py only, and only when the upstream font is replaced.
+fonttools>=4.50
+brotli>=1.1

@@ -5,3 +5,19 @@ dist/
 .claude/settings.local.json
 
 .DS_Store
+
+# Local render toolchain, created by `make setup`.
+.venv/
+
+# The generated CV. roles/*.md is the source of truth; this is written by
+# /generate-cv and then edited by hand for a particular application, so it is a
+# working file rather than something to keep. Anything in here worth keeping
+# belongs back in roles/*.md.
+cv.md
+
+# Job specs pulled down by /generate-cv - transient, and not ours to publish.
+.job-spec.txt
+.job-spec-download.pdf
+
+# Real contact details. .env.example carries placeholders; this never gets committed.
+.env

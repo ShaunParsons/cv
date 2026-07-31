@@ -1,0 +1,260 @@
+/* ---------------------------------------------------------------------------
+   style.css - the single stylesheet behind both dist/cv.html and dist/cv.pdf.
+   WeasyPrint renders the PDF from the very same HTML the browser gets, so the
+   two outputs cannot drift. Any change here must be checked against BOTH.
+
+   The type scale, palette and geometry below were measured off the 2026-07-25
+   Google Docs CV so the generated document reads as the same document.
+   --------------------------------------------------------------------------- */
+
+@font-face {
+  font-family: 'PT Mono';
+  src: url('assets/fonts/PTMono-Regular.woff2') format('woff2'),
+       url('assets/fonts/PTMono-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* PT Mono has no italic. scripts/make_oblique.py shears the regular into a
+   metric-compatible oblique so job titles slant reliably, rather than leaving
+   it to font synthesis that WeasyPrint does not perform for webfonts. */
+@font-face {
+  font-family: 'PT Mono';
+  src: url('assets/fonts/PTMono-Italic.woff2') format('woff2'),
+       url('assets/fonts/PTMono-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  /* Palette, sampled from the source PDF. */
+  --ink:      #000000;  /* section and role headings */
+  --name:     #424242;  /* the name in the masthead */
+  --body:     #666666;  /* body copy, bullets, dates */
+  --accent:   #dc952c;  /* the two masthead rules */
+
+  /* Type scale. */
+  --size-name:    24pt;
+  --size-section: 12pt;
+  --size-role:    11pt;
+  --size-body:     9pt;
+
+  --leading-body: 1.41;  /* 12.7pt on 9pt, as measured */
+  --leading-grid: 1.17;  /* 10.5pt on 9pt - the competency columns run tighter */
+
+  /* Bullet geometry. One indent step per nesting level. */
+  --indent-step:  18pt;
+  --marker-gap:   18pt;
+}
+
+/* --- Page ---------------------------------------------------------------- */
+
+@page {
+  size: A4;
+  margin: 12mm 14mm 14mm 14mm;
+}
+
+/* Screen gets the same measure as the page, centred on a plain background,
+   so the HTML at /cv reads as the PDF rather than as a full-bleed web page. */
+@media screen {
+  body {
+    max-width: 567pt;          /* A4 width less the 14mm side margins */
+    margin: 0 auto;
+    padding: 12mm 14mm 14mm;
+    background: #ffffff;
+  }
+  html { background: #f4f4f4; }
+}
+
+html {
+  font-family: 'PT Mono', 'DejaVu Sans Mono', monospace;
+  font-size: var(--size-body);
+}
+
+body {
+  color: var(--body);
+  font-size: var(--size-body);
+  line-height: var(--leading-body);
+  margin: 0;
+}
+
+/* --- Masthead ------------------------------------------------------------ */
+
+.masthead { text-align: center; }
+
+.masthead h1 {
+  color: var(--name);
+  font-size: var(--size-name);
+  font-weight: 400;              /* the source sets the name in regular */
+  line-height: 1.15;
+  margin: 0 0 10pt;
+}
+
+/* The two accent rules. Measured at 3.4pt deep and 80% of the text column,
+   centred - close enough to identical that the eye reads it as the same rule. */
+.masthead .rule {
+  width: 80%;
+  height: 3.4pt;
+  margin: 0 auto;
+  background: var(--accent);
+}
+
+.masthead .contact {
+  margin: 0;
+  padding: 8pt 0;
+}
+
+.masthead .contact p {
+  margin: 0;
+  padding: 3pt 0;
+}
+
+/* --- Summary ------------------------------------------------------------- */
+
+.summary {
+  margin: 13pt 0 0;
+}
+
+.summary p {
+  margin: 0;
+}
+
+/* --- Section headings ---------------------------------------------------- */
+
+h2 {
+  color: var(--ink);
+  font-size: var(--size-section);
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  text-transform: uppercase;
+  margin: 26pt 0 12pt;
+  /* Never leave a section heading stranded at the foot of a page. */
+  break-after: avoid;
+  break-inside: avoid;
+}
+
+/* --- Role and qualification headings ------------------------------------- */
+
+h3 {
+  color: var(--ink);
+  font-size: var(--size-role);
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 18pt 0 0;
+  break-after: avoid;
+  break-inside: avoid;
+}
+
+/* "Company, Location - *Job Title*" - the title carries the emphasis and drops
+   back to regular weight, which is what the source document does. */
+h3 em {
+  font-weight: 400;
+  font-style: italic;
+}
+
+/* The date line: the paragraph immediately after a role heading. */
+h3 + p {
+  color: var(--body);
+  font-size: var(--size-body);
+  margin: 6pt 0 0;
+  break-before: avoid;
+  break-after: avoid;
+}
+
+/* --- Lists --------------------------------------------------------------- */
+
+/* Markers are drawn as shapes rather than set as glyphs, so the build does not
+   depend on a system font happening to carry the right bullet characters. */
+ul {
+  list-style: none;
+  margin: 6pt 0 0;
+  padding: 0 0 0 var(--indent-step);
+}
+
+ul ul {
+  margin: 0;
+}
+
+li {
+  position: relative;
+  padding-left: var(--marker-gap);
+  margin: 0;
+}
+
+li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  box-sizing: border-box;
+}
+
+/* Level 1 - filled disc. */
+li::before {
+  width: 3.4pt;
+  height: 3.4pt;
+  top: 4.2pt;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* Level 2 - hollow ring. */
+ul ul > li::before {
+  width: 3.6pt;
+  height: 3.6pt;
+  top: 4.1pt;
+  border: 0.7pt solid currentColor;
+  border-radius: 50%;
+  background: none;
+}
+
+/* Level 3 - filled square. */
+ul ul ul > li::before {
+  width: 3.2pt;
+  height: 3.2pt;
+  top: 4.3pt;
+  border: 0;
+  border-radius: 0;
+  background: currentColor;
+}
+
+/* Deliberately NOT `li { break-inside: avoid }`. A parent bullet carrying two
+   or three sub-bullets is tall enough that refusing to split it strands a third
+   of a page. Orphan and widow control keeps a bullet from breaking after a
+   single line, which is the part that actually reads badly. */
+li {
+  orphans: 2;
+  widows: 2;
+}
+
+/* --- Competency / skill grids -------------------------------------------- */
+
+/* Three columns, matching the borderless 3-column table in the source. */
+.grid ul {
+  column-count: 3;
+  column-gap: 18pt;
+  line-height: var(--leading-grid);
+  padding-left: 23pt;
+  margin: 0;
+}
+
+.grid li {
+  break-inside: avoid;
+}
+
+.grid li::before {
+  top: 3.4pt;
+}
+
+/* --- Print-only refinements ---------------------------------------------- */
+
+@media print {
+  /* Avoid a role heading and its dates splitting from the first bullet. */
+  h3, h3 + p { break-after: avoid; }
+  a { color: inherit; text-decoration: none; }
+}
+
+/* Links are live in the HTML, plain in the PDF. */
+a { color: inherit; }
