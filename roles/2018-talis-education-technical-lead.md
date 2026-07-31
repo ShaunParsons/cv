@@ -287,9 +287,11 @@ is the clearest evidence in the history of what the promotion was for.
 - **Testing:** Jest for Node.js
 - **CI/CD:** CircleCI for continuous integration; deployment run through Hubot
   in Slack - ChatOps rather than continuous deployment
-- **Observability:** CloudWatch and Grafana for metrics and dashboards;
-  PagerDuty for alerting and paging, wired into provisioned infrastructure by
-  default via the internal CDK constructs
+- **Observability:** Prometheus for metrics and Loki for log aggregation, with
+  Grafana and CloudWatch for dashboards; PagerDuty for alerting and paging,
+  wired into provisioned infrastructure by default via the internal CDK
+  constructs. The Prometheus and Loki stack was built by my team; I worked in
+  it daily and ran incident management on top of it rather than setting it up
 - **Local development:** Docker, with a CLI tools repo bringing the whole stack
   up locally in one command
 - **Tooling:** a set of internal CLI tools for developer productivity, written
