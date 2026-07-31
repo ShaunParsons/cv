@@ -1,13 +1,13 @@
 ---
 name: generate-cv
-description: Write cv.md from roles/*.md and qualifications.md - generic when called bare, or tailored to a job spec when given a URL, a PDF or a text file. Use when the user asks to generate, write, tailor or refresh their CV, or asks for a CV for a particular job or company. Stops at cv.md; rendering to PDF is `make`.
+description: Write cv.md from roles/*.md, qualifications.md and profile.md - generic when called bare, or tailored to a job spec when given a URL, a PDF or a text file. Use when the user asks to generate, write, tailor or refresh their CV, or asks for a CV for a particular job or company. Stops at cv.md; rendering to PDF is `make`.
 argument-hint: "[job spec URL | path to job spec PDF/txt]"
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, WebFetch
 ---
 
 # generate-cv
 
-Turn `roles/*.md` and `qualifications.md` into `cv.md`.
+Turn `roles/*.md`, `qualifications.md` and `profile.md` into `cv.md`.
 
 **This skill stops at `cv.md`.** It does not build the deliverable PDF. The user
 reviews and edits `cv.md`, then runs `make` themselves. Do not run `make` on
@@ -45,9 +45,13 @@ towards hands-on engineering, leadership, or both.
 
 ### 2. Read the sources
 
-Read **every** file in `roles/` and `qualifications.md`. Do not work from a
-subset, and do not work from a previously generated `cv.md` - it is output, and
-tailoring from it compounds whatever the last pass dropped.
+Read **every** file in `roles/`, plus `qualifications.md` and `profile.md`. Do
+not work from a subset, and do not work from a previously generated `cv.md` - it
+is output, and tailoring from it compounds whatever the last pass dropped.
+
+`profile.md` is where the summary comes from: the interests, the direction, and
+the wording to keep. Everything in the summary traces back to it or to a role
+file, the same as every other line on the CV.
 
 Each role file carries tailoring metadata that tells you what to do:
 
@@ -80,9 +84,9 @@ handing over rather than silently widening the CV.
 
 **What always appears:**
 
-- **The interests line**, closing the summary: event-driven systems, ETL
-  pipelines and data analysis. Wording can flex to the register; the three
-  subjects do not.
+- **The interests line**, closing the summary - see `profile.md`, which holds
+  the subject and where the evidence for it sits. Wording can flex to the
+  register; what is named does not, and nothing gets added to it here.
 - **Two pages.** Never one, never three. See below - it governs how much of
   everything else survives.
 

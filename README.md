@@ -8,6 +8,7 @@ Source of truth for my CV, structured so each application gets a CV written for
 ```
 roles/*.md          one file per past role - a superset of any single CV
 qualifications.md   degrees, schooling, certifications
+profile.md          interests, direction, the summary's raw material
     │
     ▼               /generate-cv - read a job spec, select and reframe
 cv.md               generated, then reviewed and edited by hand - gitignored

@@ -15,6 +15,11 @@ time and the HTML is a build step, not an artefact - see below.
 
 `qualifications.md` holds degrees, schooling and certifications.
 
+`profile.md` holds what a CV says about me that isn't tied to any one role -
+interests, direction, and the wording of the summary. The summary is the
+highest-leverage paragraph on the page, so it gets a source file like everything
+else rather than being improvised each time.
+
 `cv.md` is written by `/generate-cv` and is then **yours to edit**. It is the
 hand-off point between the two halves of the pipeline: generating it is a
 judgement call, rendering it is not. Editing it is expected - but `roles/*.md`
