@@ -10,13 +10,13 @@ location: Coventry, UK
 ## Mandate
 
 Brought in to replace the outgoing head of engineering. Despite the title there
-was no development team - a solo role, responsible for both keeping the legacy
+was no development team - a solo role, responsible for both keeping the existing
 product running and building its replacement.
 
 ## Achievements
 
 - **Created an MVP for a multi-tenanted SaaS product** `#architecture`
-  - Purpose: to replace the legacy PHP application then in use
+  - Purpose: to replace the product then in use - an MVP built in PHP on Laravel
   - Aims: support multiple customers on a single platform, and improve
     reliability
   - Built with: Node.js, PostgreSQL and Vue.js, hosted on Heroku with file
@@ -46,7 +46,7 @@ product running and building its replacement.
   - Contribution: sole author
   - Emphasise for: backend, architecture, multi-tenant SaaS
 
-- **Maintained the existing legacy PHP application** `#delivery`
+- **Maintained the existing Laravel MVP** `#delivery`
   - What: kept the product the business was running on alive while its
     replacement was built
   - Contribution: sole developer
@@ -65,7 +65,7 @@ product running and building its replacement.
 - **Data:** Sequelize ORM, with an own-authored tenant-isolation layer on top
 - **Hosting and deployment:** Heroku, with Amazon S3 for file storage and
   automated CI/CD including database migrations
-- **Legacy product:** PHP
+- **Existing product:** PHP on Laravel - an MVP, not a long-lived legacy estate
 
 ## Tailoring notes
 

@@ -222,7 +222,9 @@ is the clearest evidence in the history of what the promotion was for.
 
 - **Introduced AWS CDK and built an internal constructs library** `#devops`
   `#architecture`
-  - Context: the estate had previously used Terraform, Ansible and Puppet
+  - Context: the estate used Terraform, Ansible and Puppet. CDK became the
+    default for new infrastructure; Ansible and Puppet were deprecated, and
+    Terraform stayed in place for IAM user management
   - What: beyond adopting CDK, built an own constructs library to standardise
     common patterns - for example SQS queues provisioned with dead letter
     queues and automatic alerting into PagerDuty as a single construct
@@ -265,8 +267,9 @@ is the clearest evidence in the history of what the promotion was for.
   instances on the inherited stack, replaced by a serverless workflow
 - **Document processing:** text extraction from PDF with coordinate data;
   normalisation of docx and EPUB to PDF via an external conversion API
-- **Infrastructure as code:** AWS CDK (introduced during the role); previously
-  Terraform, Ansible, Puppet
+- **Infrastructure as code:** AWS CDK (introduced during the role) as the
+  default for new infrastructure, alongside Terraform, which was retained for
+  IAM user management; Ansible and Puppet deprecated
 - **Datastores:** MongoDB, DocumentDB, DynamoDB, SQL databases
 - **Testing:** Jest for Node.js
 - **CI/CD:** CircleCI for continuous integration; deployment run through Hubot
