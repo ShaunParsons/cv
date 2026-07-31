@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>$name$ - CV</title>
+$if(tailored-for)$
+  <meta name="description" content="CV for $name$, tailored for $tailored-for$.">
+$else$
+  <meta name="description" content="CV for $name$.">
+$endif$
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="masthead">
+  <h1>$name$</h1>
+  <div class="rule"></div>
+  <div class="contact">
+$if(address)$
+    <p>$address$</p>
+$endif$
+$if(phone)$
+    <p>$phone$ ~ <a href="mailto:$email$">$email$</a></p>
+$else$
+    <p><a href="mailto:$email$">$email$</a></p>
+$endif$
+  </div>
+  <div class="rule"></div>
+</header>
+
+$body$
+
+</body>
+</html>
