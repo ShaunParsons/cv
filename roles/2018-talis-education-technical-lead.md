@@ -336,6 +336,18 @@ gone without active development, and any throughput or corpus figures for it.
   on, and - from around March 2019 - running the team's ceremonies. Both are
   among the strongest evidence in the role and neither depends on the title to
   land
+- **On the Kubernetes rollout, the claim is the rollout.** The bullet says what
+  was led - the implementation across the estate, completed within the tenure -
+  and does not narrate the adoption decision, which sat elsewhere. Saying what
+  was led is already precise, and a CV bullet that claims the implementation
+  cannot be read as claiming the choice. The decision only needs raising where a
+  spec asks who selected the platform
+- **On the CDK bullet, the claim ends at the constructs library.** What CDK
+  replaced is context, not achievement: Ansible and Puppet are named above
+  because the record should be complete, but a CV line spent on retired tooling
+  buys nothing, and the Terraform bullet already says which resources stayed
+  where. Bring the deprecation forward only for a spec naming Ansible or Puppet,
+  or one asking about consolidating a mixed IaC estate
 - **Leads for leadership roles:** incident review process and developer
   promotions
 - **Leads for client-facing or pre-sales roles:** the tender work - technical

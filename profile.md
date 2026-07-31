@@ -5,10 +5,10 @@ type: profile
 # Profile
 
 Source of truth for the things a CV says about me that aren't tied to any one
-role: what I'm looking for, what I'm interested in, and the raw material for the
-summary paragraph. Same rules as `roles/*.md` - a superset of what any single CV
-shows, nothing recorded that isn't confirmed, and written for the same reader who
-receives the generated CV.
+role: what I'm looking for and the raw material for the summary paragraph. Same
+rules as `roles/*.md` - a superset of what any single CV shows, nothing recorded
+that isn't confirmed, and written for the same reader who receives the generated
+CV.
 
 The summary is the highest-leverage paragraph on the CV and the only part with no
 role file behind it. This is that file.
@@ -30,20 +30,6 @@ role file behind it. This is that file.
     sole-developer product work at Opilio Technologies and Parsons Group
   - Why it matters: a spec weighted either way has real evidence behind it, so
     the register does the work rather than the summary hedging across both
-
-## Interests
-
-Stated on every CV, closing the summary. The wording flexes to the register; the
-subject does not.
-
-- **Event-driven systems** `#architecture`
-  - Evidence: the Event Sourced (CQRS) dashboard and the reusable
-    event-sourcing library, both in
-    `roles/2022-parsons-group-owner-director.md`; event-driven cross-service
-    messaging via command and notification topics; SNS, SQS, EventBridge and
-    DynamoDB Streams in anger
-  - Strength: recent, hands-on and well evidenced - the interest and the work
-    are the same thing here, which is why it is worth stating outright
 
 ## Tooling
 
@@ -80,6 +66,13 @@ the wider development team of 20-30 upskilled on Kubernetes and serverless
 through the company's weekly tech talks - all in
 `roles/2018-talis-education-technical-lead.md`.
 
+Beyond that opening, the register is plain statement rather than flourish.
+Prefer the ordinary word to the emphatic one - a first-day release made
+*achievable*, not made *real* - and let the fact carry the weight. The
+achievements are strong enough that dressing them draws attention to the
+dressing, and a reader who has seen a hundred CVs reads the emphatic word as
+padding.
+
 ## Contact
 
 The email address is `cv@shaunparsons.co.uk` and is publishable; it is hardcoded
@@ -88,10 +81,16 @@ this repo** - they are environment variables read at render time. See `CLAUDE.md
 
 ## Tailoring notes
 
-- **Interests before direction.** The interests line earns its place on every
-  CV; the "returning to full-time roles" framing only belongs where the summary
-  has room, and never at the expense of what was built.
-- **The data work is evidence, not an interest.** The self-service reporting
+- **The summary carries no qualifications.** Degrees and certifications live
+  under their own heading on the same page; see the tailoring notes in
+  `qualifications.md`. The summary's job is the evidence nothing else on the CV
+  states in one place.
+- **No standing interests line.** The summary closes on whatever the spec makes
+  strongest, not on a declared interest carried from CV to CV. What was built is
+  in `roles/*.md` and speaks for itself; the "returning to full-time roles"
+  framing only belongs where the summary has room, and never at the expense of
+  it.
+- **The data work is evidence, not a direction.** The self-service reporting
   suite and MySQL tuning at 300 million rows plus in
   `roles/2015-farmfoods-software-developer.md`, and the PL/pgSQL depth in
   `roles/2016-amigo-technology-software-developer.md`, are all still there to

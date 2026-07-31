@@ -16,7 +16,7 @@ time and the HTML is a build step, not an artefact - see below.
 `qualifications.md` holds degrees, schooling and certifications.
 
 `profile.md` holds what a CV says about me that isn't tied to any one role -
-interests, direction, and the wording of the summary. The summary is the
+direction, tooling, and the wording of the summary. The summary is the
 highest-leverage paragraph on the page, so it gets a source file like everything
 else rather than being improvised each time.
 

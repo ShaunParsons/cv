@@ -51,6 +51,13 @@ Lutterworth Grammar School and Community College, 2003 to 2007.
 
 ## Tailoring notes
 
+- **Nothing here is repeated in the summary.** The certifications and the MEng
+  have their own section, and the reader reaches it on the same page. Restating
+  them at the top spends the highest-leverage lines on the CV saying something
+  the page says again a few inches later - and those lines are worth more
+  carrying evidence a qualifications heading cannot: what was built, owned or
+  run. This holds even for a spec that names a certification; the requirement is
+  met by the section, not by the summary.
 - **Expired certifications still list.** They evidence the depth was formally
   assessed at the time, and the work behind the AWS one is in
   `roles/2018-talis-education-technical-lead.md`. Where a spec asks for a

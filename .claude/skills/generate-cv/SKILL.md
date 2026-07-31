@@ -49,9 +49,9 @@ Read **every** file in `roles/`, plus `qualifications.md` and `profile.md`. Do
 not work from a subset, and do not work from a previously generated `cv.md` - it
 is output, and tailoring from it compounds whatever the last pass dropped.
 
-`profile.md` is where the summary comes from: the interests, the direction, and
-the wording to keep. Everything in the summary traces back to it or to a role
-file, the same as every other line on the CV.
+`profile.md` is where the summary comes from: the direction and the wording to
+keep. Everything in the summary traces back to it or to a role file, the same as
+every other line on the CV.
 
 Each role file carries tailoring metadata that tells you what to do:
 
@@ -62,7 +62,10 @@ Each role file carries tailoring metadata that tells you what to do:
 - `Metric:` - a confirmed number. Use it. If there is no metric, there is no
   number - see the rules below.
 - `## Tailoring notes` - read these last and take them seriously; they encode
-  decisions already made about how each role should be presented.
+  decisions already made about how the material should be presented.
+  `profile.md` and `qualifications.md` carry a section under the same heading,
+  governing the summary and the qualifications block respectively, and they bind
+  exactly as the ones in `roles/*.md` do.
 
 ### 3. Select
 
@@ -84,9 +87,6 @@ handing over rather than silently widening the CV.
 
 **What always appears:**
 
-- **The interests line**, closing the summary - see `profile.md`, which holds
-  the subject and where the evidence for it sits. Wording can flex to the
-  register; what is named does not, and nothing gets added to it here.
 - **Two pages.** Never one, never three. See below - it governs how much of
   everything else survives.
 
@@ -126,9 +126,8 @@ tailored-for: "Staff Engineer at Example Ltd"   # omit or "" when generic
 ---
 
 ::: summary
-Two or three sentences, closing with the interests line. In tailored mode this
-is the highest-leverage paragraph on the page - it should read as though
-written for this role.
+Two or three sentences. In tailored mode this is the highest-leverage paragraph
+on the page - it should read as though written for this role.
 :::
 
 ## Key Competencies
