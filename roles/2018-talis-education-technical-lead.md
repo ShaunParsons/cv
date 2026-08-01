@@ -413,8 +413,10 @@ is the clearest evidence in the history of what the promotion was for.
 - **Streaming and analytics:** Kinesis streams, Kinesis Data Analytics for
   windowed aggregations, Kinesis Firehose, and Amazon Redshift as the warehouse
 - **Testing:** Jest for Node.js
-- **CI/CD:** CircleCI for continuous integration; deployment run through Hubot
-  in Slack - ChatOps rather than continuous deployment
+- **CI/CD:** CircleCI for continuous integration; deployment triggered from Slack
+  through Hubot, which ran on its own EC2 instance and executed Ansible playbooks
+  to carry the deployment out - ChatOps driving configuration management, rather
+  than continuous deployment or a reconciliation loop
 - **Observability:** Prometheus for metrics and Loki for log aggregation, with
   Grafana and CloudWatch for dashboards; PagerDuty for alerting and paging,
   wired into provisioned infrastructure by default via the internal CDK
