@@ -431,7 +431,7 @@ is the clearest evidence in the history of what the promotion was for.
   alongside PostgreSQL on RDS, deployed Multi-AZ and my team's to operate, and
   DocumentDB and DynamoDB
 - **Search and caching:** Elasticsearch, used substantially across the platform;
-  Redis for in-memory data
+  Redis on an ElastiCache cluster, carrying caching and queues
 - **Compute and scaling:** self-managed Kubernetes rather than EKS, running on a
   fleet of EC2 instances; Auto Scaling Groups for the web tier and for workers
   scaled on Resque queue depth; multi-availability-zone throughout
