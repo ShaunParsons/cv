@@ -36,7 +36,7 @@ marketing, and the statutory finance side.
     inventory management
   - Stack: Node.js backend, Vue.js front end, fully event-sourced
   - Deployment: fully serverless on AWS - Cognito, Lambda, SQS, SNS, DynamoDB,
-    DynamoDB Streams, CloudFront, S3, EventBridge, CloudWatch
+    DynamoDB Streams, CloudFront, S3, EventBridge, CloudWatch, Secrets Manager
   - Messaging: command and notification topics for cross-service communication
   - Infrastructure: AWS CDK for infrastructure as code
   - Contribution: sole developer
@@ -107,10 +107,12 @@ marketing, and the statutory finance side.
 - **Architecture:** event sourcing / CQRS, using an own-authored library;
   event-driven cross-service messaging via command and notification topics
 - **Cloud:** AWS - Cognito, Lambda, SQS, SNS, DynamoDB, DynamoDB Streams,
-  CloudFront, S3, EventBridge, CloudWatch
+  CloudFront, S3, EventBridge, CloudWatch, Secrets Manager
 - **Infrastructure as code:** AWS CDK
+- **Secrets management:** AWS Secrets Manager, used the same way as on the
+  serverless projects at Talis Education
 - **Deployment:** released from my own machine rather than automatically on
-  merge - see the tailoring note below
+  merge
 - **Marketing automation:** Klaviyo - campaigns and automated flows, used to run
   event promotion and trader communications
 
@@ -130,10 +132,3 @@ source of Vue.js.
   The framing is organisation and delivery, not retail
 - **Purpose on the CV:** accounts for the period since April 2023 and carries
   the most recent hands-on technical work in the history
-- **Deployment is manual and deliberately so.** Releases run from my own machine
-  rather than automatically on merge, because several services are usually
-  mid-change at once and shipping them together is what keeps a release coherent
-  across them. This is not continuous deployment and not GitOps; a spec asking
-  for either is asking for something this role does not evidence, and the CI/CD
-  evidence in the history is `roles/2018-talis-education-technical-lead.md` and
-  `roles/2018-opilio-technologies-head-of-engineering.md`

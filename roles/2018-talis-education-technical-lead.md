@@ -191,9 +191,12 @@ is the clearest evidence in the history of what the promotion was for.
   - What: one-to-ones and mentorship owned outright; performance reviews run
     jointly with the CTO
   - Metric: 6 including me, 5 reports
+  - Seniority: the company had a Staff Engineer grade, and one of the five
+    reports held it
   - Contribution: sole owner of the day-to-day management relationship; the
     review cycle was shared with the CTO
-  - Emphasise for: engineering management, team lead
+  - Emphasise for: engineering management, team lead, and any spec asking for
+    experience managing engineers at staff level
 
 - **Helped developers gain promotions and meet their career goals**
   `#leadership` `#mentoring`
@@ -288,6 +291,19 @@ is the clearest evidence in the history of what the promotion was for.
   - Emphasise for: platform, DevOps, infrastructure, cloud networking, and any
     spec naming Terraform specifically
 
+- **Held secrets in Consul, and implemented AWS Secrets Manager across the
+  serverless projects** `#devops` `#security`
+  - As found: Consul, already in place when I joined in September 2018
+  - What: AWS Secrets Manager implemented as part of the serverless projects
+    built during the role
+  - Contribution: Consul predated me and was operated rather than introduced;
+    Secrets Manager was my team's to implement
+  - Carries over: the same Secrets Manager pattern is used at Parsons Group, so
+    it is current rather than historical - see
+    `roles/2022-parsons-group-owner-director.md`
+  - Emphasise for: platform, DevOps, security, and any spec naming secrets
+    management or operational security practices
+
 - **Ran MongoDB self-managed on EC2, replicated across availability zones**
   `#devops` `#data` `#architecture`
   - What: MongoDB on EC2 instances rather than a managed database service,
@@ -358,6 +374,8 @@ is the clearest evidence in the history of what the promotion was for.
   the estate-wide resources - IAM and other global resources, VPC and VPN
   configuration, subnets, and legacy data stores including S3; Ansible and
   Puppet deprecated
+- **Secrets management:** Consul, pre-existing on the estate; AWS Secrets
+  Manager, implemented for the serverless projects
 - **Datastores:** MongoDB - self-managed on EC2 as a replicated cluster spanning
   availability zones, with read replicas, rather than a managed service -
   alongside DocumentDB, DynamoDB and SQL databases
