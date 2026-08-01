@@ -43,8 +43,11 @@ product running and building its replacement.
   `#data`
   - What: enforced separation between customers' data at the ORM level, so
     tenant scoping could not be forgotten at the call site
+  - Reads: tenant scoping applied at query time rather than left to the caller
+  - Writes: every record written with a tenant ID
   - Contribution: sole author
-  - Emphasise for: backend, architecture, multi-tenant SaaS
+  - Emphasise for: backend, architecture, multi-tenant SaaS, and any spec naming
+    data isolation or access control at the data layer
 
 - **Maintained the existing Laravel MVP** `#delivery`
   - What: kept the product the business was running on alive while its
