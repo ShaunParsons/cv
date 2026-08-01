@@ -47,6 +47,15 @@ business could query itself, and supporting the systems running in branch.
     branch
   - Emphasise for: frontend, full-stack
 
+- **Worked on card payment systems inside PCI scope** `#security` `#data`
+  - What: branch systems took card payments, which brought the work inside PCI
+    scope
+  - Change: the business transitioned card payment provider during my time there
+  - Contribution: exposure to the payment path and to the provider transition;
+    neither was mine to own
+  - Emphasise for: payments, fintech, and any spec naming PCI DSS or a regulated
+    industry
+
 - **Negotiated requirements directly with stakeholders up to board level**
   `#stakeholder`
   - Who with: stakeholders including the Board of Directors

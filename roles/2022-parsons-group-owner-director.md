@@ -49,6 +49,17 @@ marketing, and the statutory finance side.
   - Contribution: sole author
   - Emphasise for: architecture, staff+ IC, event-driven and distributed systems
 
+- **Run the whole platform for under $10 a month** `#devops` `#cost`
+  - Metric: AWS spend below $10 per month, covering the dashboard, the
+    integrations and everything supporting them
+  - How: the architecture is chosen to sit inside the free tier wherever it can
+    - serverless compute, on-demand storage and event-driven messaging rather
+    than anything running continuously
+  - Contribution: sole developer - the design decisions and the bill are both
+    mine
+  - Emphasise for: serverless, cost engineering, FinOps, founder and early
+    startup roles, and any spec naming cloud cost
+
 - **Sustained delivery of production systems while running the business**
   `#delivery`
   - What: continued to design and ship production systems throughout the period
@@ -98,6 +109,8 @@ marketing, and the statutory finance side.
 - **Cloud:** AWS - Cognito, Lambda, SQS, SNS, DynamoDB, DynamoDB Streams,
   CloudFront, S3, EventBridge, CloudWatch
 - **Infrastructure as code:** AWS CDK
+- **Deployment:** released from my own machine rather than automatically on
+  merge - see the tailoring note below
 - **Marketing automation:** Klaviyo - campaigns and automated flows, used to run
   event promotion and trader communications
 
@@ -117,3 +130,10 @@ source of Vue.js.
   The framing is organisation and delivery, not retail
 - **Purpose on the CV:** accounts for the period since April 2023 and carries
   the most recent hands-on technical work in the history
+- **Deployment is manual and deliberately so.** Releases run from my own machine
+  rather than automatically on merge, because several services are usually
+  mid-change at once and shipping them together is what keeps a release coherent
+  across them. This is not continuous deployment and not GitOps; a spec asking
+  for either is asking for something this role does not evidence, and the CI/CD
+  evidence in the history is `roles/2018-talis-education-technical-lead.md` and
+  `roles/2018-opilio-technologies-head-of-engineering.md`

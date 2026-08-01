@@ -153,9 +153,39 @@ is the clearest evidence in the history of what the promotion was for.
 - **Led the Kubernetes rollout across the entire tech stack** `#devops`
   `#architecture`
   - Outcome: implemented across the whole stack, completed during my tenure
+  - Platform: self-managed clusters, not EKS
   - Contribution: led the implementation across the estate. The decision to
     adopt Kubernetes was taken before I became technical lead
   - Emphasise for: platform, SRE, infrastructure, migration delivery
+
+- **Ran self-managed Kubernetes in production** `#devops`
+  - Scope: cluster version upgrades, node group rotation, and the scaling rules
+    the clusters ran under
+  - Contribution: my team's to run, and I led the team. The detailed cluster
+    operations sat with the engineers performing them rather than with me
+  - Emphasise for: platform, SRE, infrastructure, and any spec naming
+    self-managed Kubernetes, cluster lifecycle or version upgrades
+
+- **Autoscaled the web tier and the worker fleet** `#devops` `#architecture`
+  - Web tier: EC2 instances behind Auto Scaling Groups
+  - Workers: EC2 instances scaled on the depth of the Resque job queues, so
+    capacity followed the backlog rather than a schedule
+  - Reliability: multi-availability-zone throughout
+  - Contribution: my team's, and I led the team
+  - Emphasise for: platform, SRE, infrastructure, and any spec naming
+    autoscaling, elastic capacity or queue-driven scaling
+
+- **Planned capacity and reserved instance commitments around a seasonal peak**
+  `#devops` `#cost`
+  - Cycle: throughput rose by an order of magnitude at the start of the UK
+    academic year in September, with a smaller peak in January
+  - What: set out the instance requirements and the reserved instance
+    commitments matching steady-state need, holding on-demand capacity back to
+    absorb the peaks rather than reserving for them
+  - Where: across the EC2 fleet, and more so once Kubernetes ran on it
+  - Contribution: my team's, and I led the team
+  - Emphasise for: platform, SRE, infrastructure, FinOps, and any spec naming
+    capacity planning, cloud cost or reserved instances
 
 - **Managed a team of six** `#leadership` `#mentoring`
   - What: one-to-ones and mentorship owned outright; performance reviews run
@@ -249,6 +279,8 @@ is the clearest evidence in the history of what the promotion was for.
   Terraform** `#devops` `#architecture`
   - Scope: predominantly global resources - IAM chief among them - alongside
     VPC and VPN configuration, subnets, and legacy data stores including S3
+  - Cross-region: connections between VPCs in different regions, carrying data
+    transfer between them for a small number of specific cases
   - Why Terraform rather than CDK: these are the estate-wide resources that sit
     underneath and across every service, so they stayed in the tool that
     already held them while CDK took new per-service infrastructure
@@ -329,6 +361,11 @@ is the clearest evidence in the history of what the promotion was for.
 - **Datastores:** MongoDB - self-managed on EC2 as a replicated cluster spanning
   availability zones, with read replicas, rather than a managed service -
   alongside DocumentDB, DynamoDB and SQL databases
+- **Search and caching:** Elasticsearch, used substantially across the platform;
+  Redis for in-memory data
+- **Compute and scaling:** self-managed Kubernetes rather than EKS, running on a
+  fleet of EC2 instances; Auto Scaling Groups for the web tier and for workers
+  scaled on Resque queue depth; multi-availability-zone throughout
 - **Testing:** Jest for Node.js
 - **CI/CD:** CircleCI for continuous integration; deployment run through Hubot
   in Slack - ChatOps rather than continuous deployment
@@ -352,6 +389,14 @@ saving on the PHP to serverless migration, how long the extraction service had
 gone without active development, and any throughput or corpus figures for it.
 
 ## Tailoring notes
+
+- **Access control and network policy were AWS-layer, not Kubernetes-layer.**
+  Roles and service accounts were configured through AWS IAM, and network
+  segmentation through VPC, subnet and VPN configuration. The clusters were not
+  governed by Kubernetes RBAC objects or by Kubernetes Network Policies. Platform
+  specs often name both layers in a single line as though they were one skill;
+  the IAM and the VPC work answer the AWS half precisely, and the Kubernetes half
+  is a different set of objects.
 
 - **Leads for hands-on roles:** the extraction service arc - picked up stale,
   extended, debugged, then migrated off F3 to serverless. Told end to end it is
