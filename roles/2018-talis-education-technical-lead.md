@@ -319,6 +319,32 @@ is the clearest evidence in the history of what the promotion was for.
   - Emphasise for: platform, SRE, infrastructure, and any spec drawing a line
     between databases operated and databases consumed
 
+- **Took ownership of the streaming analytics pipeline and moved it onto CDK**
+  `#devops` `#data` `#architecture`
+  - Stack: Kinesis streams feeding Kinesis Data Analytics, which ran the
+    aggregations over time windows; Kinesis Firehose for delivery; Amazon
+    Redshift as the warehouse
+  - Context: built before my team held it, and running in production by the time
+    it came to us
+  - What: developed the pipeline further, and moved it from a hand-rolled
+    deployment onto AWS CDK, so it was provisioned the same way as the rest of
+    the new infrastructure
+  - Contribution: my team's to own, develop and re-platform. I led that team
+  - Emphasise for: platform, data engineering, and any spec naming streaming,
+    event streaming, real-time data, Kinesis or a data warehouse
+
+- **Found and fixed incorrect aggregations of customer data in the streaming
+  pipeline** `#data` `#devops` `#architecture`
+  - Context: inherited with the pipeline rather than introduced by my team, and
+    one of the first pieces of work we were given after taking it on
+  - Symptom: aggregations over customer event data coming out wrong, raised with
+    us by customers
+  - Cause: the Kinesis Data Analytics applications were configured with a time
+    window larger than the service documentation allowed
+  - Contribution: my team diagnosed it and implemented the fix. I led that team
+  - Emphasise for: platform, data engineering, distributed systems, and any spec
+    naming production debugging, streaming or real-time data
+
 - **Took the platform multi-region when US customers wanted their data held
   locally** `#devops` `#architecture`
   - Context: a multi-tenanted SaaS platform serving universities, with tenants
@@ -384,6 +410,8 @@ is the clearest evidence in the history of what the promotion was for.
 - **Compute and scaling:** self-managed Kubernetes rather than EKS, running on a
   fleet of EC2 instances; Auto Scaling Groups for the web tier and for workers
   scaled on Resque queue depth; multi-availability-zone throughout
+- **Streaming and analytics:** Kinesis streams, Kinesis Data Analytics for
+  windowed aggregations, Kinesis Firehose, and Amazon Redshift as the warehouse
 - **Testing:** Jest for Node.js
 - **CI/CD:** CircleCI for continuous integration; deployment run through Hubot
   in Slack - ChatOps rather than continuous deployment
@@ -457,6 +485,21 @@ gone without active development, and any throughput or corpus figures for it.
   requirement - where they do, the SLA bullet answers the part that exists, and
   the on-call rota and blameless incident review carry the rest. The three are
   different artefacts and an interviewer who runs them will hear the difference
+- **The Kinesis pipeline is the answer to "streaming platforms".** Platform
+  specs routinely list distributed systems, event-driven architecture and
+  streaming as alternatives; the first two are answered several times over
+  across the history, and this is the only evidence for the third. It is also
+  the second inherited-system arc in this role, and it runs the same course as
+  the extraction service - taken on, debugged, then re-platformed. Two
+  independent instances of that arc are the pattern worth naming for a spec
+  asking about maturing what already exists
+- **Secrets management spans two roles, and the current one is Secrets
+  Manager.** Consul predates me here and Secrets Manager was adopted for the
+  serverless work; the same pattern is in daily use at Parsons Group. For a spec
+  naming secrets management, lead with Secrets Manager and let Consul carry the
+  breadth. Where a spec pairs it with RBAC, the evidence is the IAM policy in
+  the Terraform above and the tenant isolation in the application and data
+  layers
 - **Leads for leadership roles:** incident review process and developer
   promotions
 - **Leads for client-facing or pre-sales roles:** the tender work - technical
