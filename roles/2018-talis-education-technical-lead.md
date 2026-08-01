@@ -260,8 +260,13 @@ is the clearest evidence in the history of what the promotion was for.
   - Later: once the project was well established, tooling was built inside
     sprints as part of the Kubernetes migration, so the tooling for the new
     platform existed from the day the platform did
+  - Outcome: the tools ended up carrying production deployments. Once Ansible
+    was deprecated, Hubot ran releases through this tooling instead of through
+    playbooks
   - Why it matters: seeded rather than owned. Distributing the ownership on
-    purpose is why it kept growing without me
+    purpose is why it kept growing without me - far enough that something I
+    started as a way to share bash scripts became the deployment path for the
+    estate
   - Emphasise for: platform, developer experience, staff+ IC, internal tooling,
     roles naming developer productivity
 
@@ -398,8 +403,9 @@ is the clearest evidence in the history of what the promotion was for.
 - **Infrastructure as code:** AWS CDK (introduced during the role) as the
   default for new per-service infrastructure, alongside Terraform, which held
   the estate-wide resources - IAM and other global resources, VPC and VPN
-  configuration, subnets, and legacy data stores including S3; Ansible and
-  Puppet deprecated
+  configuration, subnets, and legacy data stores including S3. Ansible carried
+  deployments until it was deprecated, on playbooks I maintained rather than
+  wrote from scratch; Puppet deprecated
 - **Secrets management:** Consul, pre-existing on the estate; AWS Secrets
   Manager, implemented for the serverless projects
 - **Datastores:** MongoDB - self-managed on EC2 as a replicated cluster spanning
@@ -414,9 +420,10 @@ is the clearest evidence in the history of what the promotion was for.
   windowed aggregations, Kinesis Firehose, and Amazon Redshift as the warehouse
 - **Testing:** Jest for Node.js
 - **CI/CD:** CircleCI for continuous integration; deployment triggered from Slack
-  through Hubot, which ran on its own EC2 instance and executed Ansible playbooks
-  to carry the deployment out - ChatOps driving configuration management, rather
-  than continuous deployment or a reconciliation loop
+  through Hubot, running on its own EC2 instance. Hubot executed Ansible
+  playbooks to begin with, and moved onto the internal CLI tools once Ansible was
+  deprecated - ChatOps throughout, rather than continuous deployment or a
+  reconciliation loop
 - **Observability:** Prometheus for metrics and Loki for log aggregation, with
   Grafana and CloudWatch for dashboards; PagerDuty for alerting and paging,
   wired into provisioned infrastructure by default via the internal CDK
