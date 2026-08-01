@@ -124,6 +124,18 @@ is the clearest evidence in the history of what the promotion was for.
   - Contribution: a team and platform achievement
   - Emphasise for: SRE, platform, engineering management
 
+- **Owned delivery against the platform's customer SLAs** `#devops` `#leadership`
+  - Commitment: 99.9% uptime, written into customer contracts. The same terms
+    applied to every customer rather than being negotiated per institution
+  - Result: the 99.99% above - a tenth of the downtime the contract allowed
+  - Contribution: responsible for delivering against the SLA. The terms
+    themselves were set by the team handling contracts, with the CTO, and agreed
+    with customers as they signed - not mine to write or negotiate
+  - How: the on-call rota and the incident review process below are the
+    machinery that met it
+  - Emphasise for: SRE, platform, engineering management, and any spec naming
+    SLAs, reliability targets or contractual uptime
+
 - **Owned incident management across a 10-developer on-call rota** `#leadership`
   `#devops`
   - Scale: 24x7 support for all services, with 10 developers on a rota I was
@@ -374,6 +386,14 @@ gone without active development, and any throughput or corpus figures for it.
   or high availability at the data layer; leave it off where the datastore is
   incidental to the role. The attribution is shared, and the bullet says so -
   the team built and ran it, and I led the team
+- **The reliability commitment was an SLA, not an SLO.** 99.9% uptime, written
+  into customer contracts and set outside engineering. There was no separate
+  internal objective held stricter than the contractual one, and no error
+  budget governing what the team worked on. Platform and SRE specs increasingly
+  name SLOs, SLAs and error budgets together as though they were one
+  requirement - where they do, the SLA bullet answers the part that exists, and
+  the on-call rota and blameless incident review carry the rest. The three are
+  different artefacts and an interviewer who runs them will hear the difference
 - **Leads for leadership roles:** incident review process and developer
   promotions
 - **Leads for client-facing or pre-sales roles:** the tender work - technical
