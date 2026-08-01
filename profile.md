@@ -99,6 +99,11 @@ once:
   and AWS CDK the platform's infrastructure was defined in" arrives after the
   sentence has already closed, and strands its preposition getting there. A fact
   that needs saying gets its own slot in the series or its own sentence.
+- **An aside holds one thing, said whole.** "- one of the core technologies
+  behind the company's e-book reader, left stale -" tacks a verb-less
+  fragment onto the end of the aside, and "left stale" dangles with nothing
+  to hang on. Where a state matters, put it on the noun - "a stale
+  microservice" - and let the aside carry the single fact it was opened for.
 - **Don't run a series inside a dash parenthetical and then carry on.** "Led a
   team of six - designing X, introducing Y, and owning Z - and now ships..."
   asks the reader to hold the sentence open across three claims and then keep

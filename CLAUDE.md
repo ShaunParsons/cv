@@ -103,10 +103,11 @@ Five rules hold across all of them:
 - **Every bullet stands alone.** A bullet never leans on a neighbour for its
   subject - "took the service on" with the antecedent a bullet away reads as
   nothing to a reader skimming bullets out of order, which is how bullets are
-  read. Where several bullets tell one arc, name the subject in the first,
-  run them in the order it happened, and let each later bullet carry enough
-  of a handle ("that service", "its migration", directly after) to be read on
-  its own.
+  read. Where several bullets tell one arc, nest it: the first names the
+  subject and holds the top level, and the rest indent beneath it, so the
+  structure carries the antecedent and a handle like "its" reads cleanly
+  because the parent is visibly the subject. Run the arc in the order it
+  happened either way.
 - **Compression never widens a claim.** Shortening a line must not grow what
   it claims. "Designed its serverless migration" after naming the platform
   and "designed a core microservice's migration onto serverless AWS" differ
@@ -114,7 +115,10 @@ Five rules hold across all of them:
   where it slips, reaching back to a bigger object than the one the role file
   records. When cutting for space, re-check every claim against the source's
   scope. The summary is where this bites hardest, because it compresses the
-  most.
+  most. The same care guards *who* a claim is about: dropping the "each" from
+  "each within about a year of that person joining" leaves the year reading
+  as mine rather than theirs. The small words that pin a reference are
+  usually the first cut for space, and the last that should be.
 
 ### General
 
