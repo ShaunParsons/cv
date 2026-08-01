@@ -94,20 +94,38 @@ is the clearest evidence in the history of what the promotion was for.
     implemented it under that design
   - Emphasise for: backend, platform, architecture, modernisation
 
-- **Ran the team's agile ceremonies for a year before holding the title**
-  `#leadership` `#delivery`
-  - Period: roughly March 2019 to March 2020, while still a Senior Developer
-  - What: led the daily stand-ups, and the weekly and bi-weekly sprint planning
-    and sprint review meetings
+- **Ran the team's agile ceremonies, from a year before holding the title
+  through to the end of the role** `#leadership` `#delivery`
+  - Period: roughly March 2019 to April 2023, the first year of it while still a
+    Senior Developer
+  - What: led the daily stand-ups, sprint planning, the mid-sprint review and
+    the end-of-sprint review
+  - Estimation: new work was estimated as part of these ceremonies, with the
+    estimating itself done collaboratively by the team
   - Supervision: initially run under my manager, the CTO
   - Team: included developers considerably more experienced than I was at the
     time, whose guidance I drew on where it helped
-  - Contribution: mine to run day to day; the oversight was the CTO's
-  - Why it matters: this is the year immediately preceding the promotion to
-    Technical Lead, and it was leadership taken on from an IC seat rather than
-    conferred with a title
-  - Emphasise for: team lead, engineering management, and any spec asking for
-    evidence of operating above the current level
+  - Contribution: mine to run day to day. The oversight was the CTO's at the
+    outset, and the estimates were the team's
+  - Why it matters: the first year is the one immediately preceding the
+    promotion to Technical Lead, and it was leadership taken on from an IC seat
+    rather than conferred with a title
+  - Emphasise for: team lead, engineering management, technical architecture,
+    any spec naming estimation, sprint planning or agile ceremonies, and any
+    spec asking for evidence of operating above the current level
+
+- **Moved estimation out of sprint planning and into the daily stand-ups**
+  `#delivery` `#leadership`
+  - Before: every piece of new work was estimated inside sprint planning, which
+    made the meeting run long
+  - Change: estimated new work in the daily stand-up instead, a little each day,
+    so sprint planning arrived with the estimates already done
+  - Result: planning no longer had to produce the estimates, and the estimating
+    was spread across the sprint rather than concentrated in one session
+  - Contribution: mine - I proposed the change and drove it. The estimating
+    itself stayed a collaborative team exercise
+  - Emphasise for: delivery, technical architecture, team lead, and any spec
+    naming estimation, agile ceremonies or improving delivery process
 
 - **Wrote and reviewed architectural decision records** `#architecture`
   - Context: ADRs were introduced by a member of the front-end team, not by me
@@ -410,7 +428,8 @@ is the clearest evidence in the history of what the promotion was for.
   Manager, implemented for the serverless projects
 - **Datastores:** MongoDB - self-managed on EC2 as a replicated cluster spanning
   availability zones, with read replicas, rather than a managed service -
-  alongside DocumentDB, DynamoDB and SQL databases
+  alongside PostgreSQL on RDS, deployed Multi-AZ and my team's to operate, and
+  DocumentDB and DynamoDB
 - **Search and caching:** Elasticsearch, used substantially across the platform;
   Redis for in-memory data
 - **Compute and scaling:** self-managed Kubernetes rather than EKS, running on a
@@ -419,11 +438,12 @@ is the clearest evidence in the history of what the promotion was for.
 - **Streaming and analytics:** Kinesis streams, Kinesis Data Analytics for
   windowed aggregations, Kinesis Firehose, and Amazon Redshift as the warehouse
 - **Testing:** Jest for Node.js
-- **CI/CD:** CircleCI for continuous integration; deployment triggered from Slack
-  through Hubot, running on its own EC2 instance. Hubot executed Ansible
-  playbooks to begin with, and moved onto the internal CLI tools once Ansible was
-  deprecated - ChatOps throughout, rather than continuous deployment or a
-  reconciliation loop
+- **CI/CD:** CircleCI for continuous integration across the estate, with GitHub
+  Actions running tests and building artifacts on some of the newer services
+  towards the end of the tenure; deployment triggered from Slack through Hubot,
+  running on its own EC2 instance. Hubot executed Ansible playbooks to begin
+  with, and moved onto the internal CLI tools once Ansible was deprecated -
+  ChatOps throughout, rather than continuous deployment or a reconciliation loop
 - **Observability:** Prometheus for metrics and Loki for log aggregation, with
   Grafana and CloudWatch for dashboards; PagerDuty for alerting and paging,
   wired into provisioned infrastructure by default via the internal CDK
@@ -435,13 +455,16 @@ is the clearest evidence in the history of what the promotion was for.
   in Bash; an internal AWS CDK constructs library for standardised
   infrastructure patterns
 - **Collaboration:** G Suite, then Microsoft Teams following the migration
-- **Ways of working:** 24x7 on-call rota, blameless incident review
+- **Ways of working:** 24x7 on-call rota, blameless incident review; daily
+  stand-ups, sprint planning, mid-sprint and end-of-sprint reviews, with new
+  work estimated collaboratively in the stand-ups
 
 **Scope:** a back-end and platform role throughout - no front-end development.
 
 **Figures not available:** interviews conducted, incident volumes, the cost
 saving on the PHP to serverless migration, how long the extraction service had
-gone without active development, and any throughput or corpus figures for it.
+gone without active development, any throughput or corpus figures for it, and
+the time sprint planning took before and after estimation moved out of it.
 
 ## Tailoring notes
 
@@ -452,6 +475,15 @@ gone without active development, and any throughput or corpus figures for it.
   specs often name both layers in a single line as though they were one skill;
   the IAM and the VPC work answer the AWS half precisely, and the Kubernetes half
   is a different set of objects.
+
+- **Estimation is one story told in two bullets, and the second one leads.**
+  Architect and technical lead specs routinely ask for estimation alongside
+  architecture and requirements work. The ceremonies bullet carries the
+  responsibility - four ceremonies run across four years, with estimation inside
+  them - and the stand-up change carries the judgement: a problem, a decision
+  that was mine, and what followed. Where only one line is available, spend it
+  on the change, because a responsibility is a job description and a change is
+  evidence. The estimating itself was the team's and both bullets say so
 
 - **Leads for hands-on roles:** the extraction service arc - picked up stale,
   extended, debugged, then migrated off F3 to serverless. Told end to end it is
@@ -480,7 +512,9 @@ gone without active development, and any throughput or corpus figures for it.
   or one asking about consolidating a mixed IaC estate
 - **The MongoDB cluster is the evidence for "operated, not consumed".** Platform
   and persistence specs increasingly draw that line in as many words, and
-  DocumentDB and DynamoDB sit on the wrong side of it. Self-managed replicas on
+  DocumentDB, DynamoDB and RDS sit on the wrong side of it - the Multi-AZ
+  Postgres was operated by the team but the service was managed, so it answers a
+  spec naming RDS rather than one naming self-managed persistence. Self-managed replicas on
   EC2, spanning availability zones, sit on the right side. Bring it forward for
   any spec naming distributed databases, replication, self-managed persistence
   or high availability at the data layer; leave it off where the datastore is

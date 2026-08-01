@@ -33,7 +33,7 @@ marketing, and the statutory finance side.
 - **Built an internal Event Sourced (CQRS) business dashboard** `#architecture`
   `#devops`
   - What: integrates with multiple external systems to manage social media and
-    inventory management
+    inventory management, including the four e-commerce channels below
   - Stack: Node.js backend, Vue.js front end, fully event-sourced
   - Deployment: fully serverless on AWS - Cognito, Lambda, SQS, SNS, DynamoDB,
     DynamoDB Streams, CloudFront, S3, EventBridge, CloudWatch, Secrets Manager
@@ -41,6 +41,19 @@ marketing, and the statutory finance side.
   - Infrastructure: AWS CDK for infrastructure as code
   - Contribution: sole developer
   - Emphasise for: backend, platform, serverless, architecture, event-driven
+
+- **Integrated four e-commerce channels into one order and inventory flow**
+  `#architecture` `#data`
+  - Channels: Shopify, Etsy, eBay and Amazon
+  - Orders: pulled in from each channel into the dashboard
+  - Inventory: stock levels pushed back out to each channel, so what each one
+    advertises follows what is actually held
+  - Why it matters: four separate third-party APIs behind a single order and
+    inventory flow, rather than each channel worked in its own admin
+  - Contribution: sole developer
+  - Emphasise for: e-commerce, marketplace and multi-channel retail, API
+    integration, and any spec naming third-party integration, order management
+    or inventory synchronisation
 
 - **Authored a reusable event-sourcing library** `#architecture`
   - What: own event-sourcing implementation, tied into the AWS ecosystem via
@@ -55,6 +68,10 @@ marketing, and the statutory finance side.
   - How: the architecture is chosen to sit inside the free tier wherever it can
     - serverless compute, on-demand storage and event-driven messaging rather
     than anything running continuously
+  - Decision: the read models ran on RDS PostgreSQL first and were moved onto
+    DynamoDB on cost grounds. RDS needs at least one instance running inside a
+    VPC, which is a high fixed cost to carry against a relatively low-throughput
+    service; on-demand DynamoDB bills for what the read models actually use
   - Contribution: sole developer - the design decisions and the bill are both
     mine
   - Emphasise for: serverless, cost engineering, FinOps, founder and early
@@ -107,14 +124,18 @@ marketing, and the statutory finance side.
 - **Architecture:** event sourcing / CQRS, using an own-authored library;
   event-driven cross-service messaging via command and notification topics
 - **Cloud:** AWS - Cognito, Lambda, SQS, SNS, DynamoDB, DynamoDB Streams,
-  CloudFront, S3, EventBridge, CloudWatch, Secrets Manager
+  CloudFront, S3, EventBridge, CloudWatch, Secrets Manager; RDS PostgreSQL
+  carried the read models before they moved onto DynamoDB
 - **Infrastructure as code:** AWS CDK
 - **Secrets management:** AWS Secrets Manager, used the same way as on the
   serverless projects at Talis Education
+- **CI:** GitHub Actions, running the test suite
 - **Deployment:** released from my own machine rather than automatically on
-  merge
+  merge - GitHub Actions covers the tests, not the release
 - **Marketing automation:** Klaviyo - campaigns and automated flows, used to run
   event promotion and trader communications
+- **E-commerce channels:** Shopify, Etsy, eBay and Amazon, integrated through
+  their APIs - orders pulled in, stock levels pushed back out
 
 **Note:** the only role in the history with front-end work, and so the sole
 source of Vue.js.
@@ -130,5 +151,12 @@ source of Vue.js.
 - **Leads for delivery and project management roles:** the markets - a fixed
   date, 60+ external parties, contracted day staff and a measurable turnout.
   The framing is organisation and delivery, not retail
+- **This is the only e-commerce evidence in the history, and it is current.**
+  Specs asking for e-commerce, marketplace or order-management experience are
+  answered here and nowhere else - the card payment work in
+  `roles/2015-farmfoods-software-developer.md` is in-branch retail from 2015 and
+  the contribution line there is deliberately narrow. Lead with the two
+  directions, orders in and stock out, because that is what separates an order
+  flow from a catalogue sync
 - **Purpose on the CV:** accounts for the period since April 2023 and carries
   the most recent hands-on technical work in the history
