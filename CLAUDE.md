@@ -86,7 +86,7 @@ The facts in `roles/*.md` don't change between CVs. What changes is which of
 them lead, and the register they're written in. Below are the registers. Pick
 one from the job spec; when called bare, use **General**.
 
-Three rules hold across all of them:
+Five rules hold across all of them:
 
 - **Two pages, always.** Not two and a bit. `make` renders A4 and
   `pdfinfo dist/cv.pdf` is the arbiter. Fitting is a writing problem, not a
@@ -100,6 +100,21 @@ Three rules hold across all of them:
   joined by "and" with a third hung off "alongside". The construction rules
   under `## Voice` in `profile.md` are written for the summary but govern every
   line on the page.
+- **Every bullet stands alone.** A bullet never leans on a neighbour for its
+  subject - "took the service on" with the antecedent a bullet away reads as
+  nothing to a reader skimming bullets out of order, which is how bullets are
+  read. Where several bullets tell one arc, name the subject in the first,
+  run them in the order it happened, and let each later bullet carry enough
+  of a handle ("that service", "its migration", directly after) to be read on
+  its own.
+- **Compression never widens a claim.** Shortening a line must not grow what
+  it claims. "Designed its serverless migration" after naming the platform
+  and "designed a core microservice's migration onto serverless AWS" differ
+  by a few words and a whole achievement - and the pronoun or possessive is
+  where it slips, reaching back to a bigger object than the one the role file
+  records. When cutting for space, re-check every claim against the source's
+  scope. The summary is where this bites hardest, because it compresses the
+  most.
 
 ### General
 
@@ -193,7 +208,11 @@ as in every other, with no suggestion that AI had a hand in it.
 **Only in this register**, close the summary with a line noting that the CV
 itself is generated with Claude Code from a public repo, and link
 <https://github.com/ShaunParsons/cv>. It is a working sample, and in front of
-this audience that is the strongest single line on the page. In every other
+this audience that is the strongest single line on the page. Write it as a
+plain statement - name the tool, link the repo, stop. Do not call it a working
+sample or otherwise explain its own significance: the reader who clicks
+through reaches that conclusion themselves, and a line announcing it is the
+sentence watching itself work. In every other
 register it is a distraction and must not appear - do not link the repo, and do
 not mention how the CV was produced.
 

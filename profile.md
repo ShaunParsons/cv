@@ -99,11 +99,22 @@ once:
   and AWS CDK the platform's infrastructure was defined in" arrives after the
   sentence has already closed, and strands its preposition getting there. A fact
   that needs saying gets its own slot in the series or its own sentence.
+- **Don't run a series inside a dash parenthetical and then carry on.** "Led a
+  team of six - designing X, introducing Y, and owning Z - and now ships..."
+  asks the reader to hold the sentence open across three claims and then keep
+  going. The parenthetical was a sentence; let it be one. A dash pair holds an
+  aside of a few words, not the evidence.
 - **Don't reach for the aphorism.** "...were procurement questions before they
   were engineering ones" has the shape of an insight rather than the substance
   of one. This is the emphatic-word rule again, and it bites harder: a clever
   construction is more conspicuous than a clever adjective, so the reader ends
   up watching the sentence work instead of reading the fact.
+- **A result gets a verb, not a preposition.** "...owned incident management
+  across a 24x7 on-call rota to 99.99% uptime" hangs the outcome off "to" as
+  though it were a destination, and the reader has to reconstruct the causal
+  link. "...achieving a 99.99% uptime" costs one word and gives the result its
+  own verb, which is what makes it read as an outcome rather than a
+  compression artefact.
 - **One claim per clause, and stop when the claim is made.** Where a sentence is
   carrying three subordinate ideas it is two sentences, or it is one sentence
   and a bullet that should have kept the rest.
