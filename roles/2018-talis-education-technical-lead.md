@@ -114,6 +114,32 @@ is the clearest evidence in the history of what the promotion was for.
     any spec naming estimation, sprint planning or agile ceremonies, and any
     spec asking for evidence of operating above the current level
 
+- **Planned sprint capacity from measured velocity, and reported delivery in
+  the business's categories** `#delivery` `#leadership`
+  - How: sprint capacity planned from average velocity over previous sprints,
+    normalised per person-day and adjusted for holidays and other absence
+  - Unplanned work: as the platform team, a sizeable share of each sprint went
+    to work that could not be planned - downtime, and urgent requests from
+    other teams - so capacity was explicitly held back for it rather than
+    absorbed as overrun
+  - Seasonal: around peak periods such as the start of the academic year, the
+    planned allocation was reduced further, holding more capacity free for
+    incident response
+  - Pull-forward: planning always ran slightly ahead, with tickets marked as
+    pull-forward in the upcoming sprint - so if the reserved capacity went
+    unused because incidents came in below expectation, the team drew from a
+    longer-term plan of ready work rather than running out
+  - Reporting: sprint velocity reported back to the business broken down into
+    the categories it cared about - product features, platform enhancements,
+    bug fixes and incident response - so a shortfall in product work could be
+    traced to its cause, such as a rise in incident response, rather than left
+    unexplained
+  - Contribution: run within the ceremonies I led; the estimates themselves
+    stayed a collaborative team exercise
+  - Emphasise for: engineering management, delivery, project management, and
+    any spec naming delivery metrics, velocity, capacity planning or sprint
+    reporting
+
 - **Moved estimation out of sprint planning and into the daily stand-ups**
   `#delivery` `#leadership`
   - Before: every piece of new work was estimated inside sprint planning, which
@@ -137,18 +163,16 @@ is the clearest evidence in the history of what the promotion was for.
   - Emphasise for: architecture, staff+ IC, roles naming design documentation or
     RFC culture
 
-- **Achieved 99.99% uptime across the estate** `#devops`
-  - Metric: 99.99% over the final 12 month period
-  - Contribution: a team and platform achievement
-  - Emphasise for: SRE, platform, engineering management
-
-- **Owned delivery against the platform's customer SLAs** `#devops` `#leadership`
+- **Owned delivery against the platform's customer SLAs, achieving 99.99%
+  uptime across the estate** `#devops` `#leadership`
   - Commitment: 99.9% uptime, written into customer contracts. The same terms
     applied to every customer rather than being negotiated per institution
-  - Result: the 99.99% above - a tenth of the downtime the contract allowed
-  - Contribution: responsible for delivering against the SLA. The terms
-    themselves were set by the team handling contracts, with the CTO, and agreed
-    with customers as they signed - not mine to write or negotiate
+  - Metric: 99.99% over the final 12 month period - a tenth of the downtime
+    the contract allowed
+  - Contribution: responsible for delivering against the SLA; the uptime
+    itself is a team and platform achievement. The terms were set by the team
+    handling contracts, with the CTO, and agreed with customers as they
+    signed - not mine to write or negotiate
   - How: the on-call rota and the incident review process below are the
     machinery that met it
   - Emphasise for: SRE, platform, engineering management, and any spec naming
@@ -176,22 +200,19 @@ is the clearest evidence in the history of what the promotion was for.
     adopt Kubernetes was taken before I became technical lead
   - Emphasise for: platform, SRE, infrastructure, migration delivery
 
-- **Ran self-managed Kubernetes in production** `#devops`
-  - Scope: cluster version upgrades, node group rotation, and the scaling rules
-    the clusters ran under
-  - Contribution: my team's to run, and I led the team. The detailed cluster
-    operations sat with the engineers performing them rather than with me
-  - Emphasise for: platform, SRE, infrastructure, and any spec naming
-    self-managed Kubernetes, cluster lifecycle or version upgrades
-
-- **Autoscaled the web tier and the worker fleet** `#devops` `#architecture`
+- **Ran self-managed Kubernetes in production, and autoscaled the web and
+  worker fleets** `#devops` `#architecture`
+  - Kubernetes: cluster version upgrades, node group rotation, and the scaling
+    rules the clusters ran under - self-managed, not EKS
   - Web tier: EC2 instances behind Auto Scaling Groups
   - Workers: EC2 instances scaled on the depth of the Resque job queues, so
     capacity followed the backlog rather than a schedule
   - Reliability: multi-availability-zone throughout
-  - Contribution: my team's, and I led the team
+  - Contribution: my team's to run, and I led the team. The detailed cluster
+    operations sat with the engineers performing them rather than with me
   - Emphasise for: platform, SRE, infrastructure, and any spec naming
-    autoscaling, elastic capacity or queue-driven scaling
+    self-managed Kubernetes, cluster lifecycle, version upgrades, autoscaling
+    or queue-driven scaling
 
 - **Planned capacity and reserved instance commitments around a seasonal peak**
   `#devops` `#cost`
@@ -293,6 +314,9 @@ is the clearest evidence in the history of what the promotion was for.
   - Context: the estate used Terraform, Ansible and Puppet. CDK became the
     default for new infrastructure and Ansible and Puppet were deprecated;
     Terraform stayed in place for the estate-wide resources described below
+  - Selection: experimented with the Serverless Framework, SAM Local and
+    LocalStack for serverless work and local development before settling on
+    CDK, with testing done against real AWS rather than local emulation
   - What: beyond adopting CDK, built an own constructs library to standardise
     common patterns - for example SQS queues provisioned with dead letter
     queues and automatic alerting into PagerDuty as a single construct
@@ -409,9 +433,12 @@ is the clearest evidence in the history of what the promotion was for.
   from)
 - **Frameworks and job processing:** Fat-Free Framework (F3) and Resque
   (php-resque) on the inherited extraction service, both migrated away from
-- **Cloud and orchestration:** AWS, serverless, Kubernetes, microservices; EC2
-  instances on the inherited stack, where the Resque workers were replaced by a
-  serverless workflow and the MongoDB cluster stayed on EC2 throughout
+- **Cloud, compute and orchestration:** AWS, serverless, microservices;
+  self-managed Kubernetes rather than EKS, on a fleet of EC2 instances; Auto
+  Scaling Groups for the web tier and for workers scaled on Resque queue
+  depth, multi-availability-zone throughout. On the inherited stack the Resque
+  workers were replaced by a serverless workflow, and the MongoDB cluster
+  stayed on EC2 throughout
 - **Platform shape:** a multi-tenanted SaaS platform, tenants sharing the
   platform with isolation enforced in the application and data layers, deployed
   across multiple AWS regions. The multi-tenancy predated me; the multi-region
@@ -421,7 +448,9 @@ is the clearest evidence in the history of what the promotion was for.
 - **Infrastructure as code:** AWS CDK (introduced during the role) as the
   default for new per-service infrastructure, alongside Terraform, which held
   the estate-wide resources - IAM and other global resources, VPC and VPN
-  configuration, subnets, and legacy data stores including S3. Ansible carried
+  configuration, subnets, and legacy data stores including S3. The Serverless
+  Framework, SAM Local and LocalStack were trialled hands-on for serverless
+  work and local development before CDK was settled on. Ansible carried
   deployments until it was deprecated, on playbooks I maintained rather than
   wrote from scratch; Puppet deprecated
 - **Secrets management:** Consul, pre-existing on the estate; AWS Secrets
@@ -432,18 +461,20 @@ is the clearest evidence in the history of what the promotion was for.
   DocumentDB and DynamoDB
 - **Search and caching:** Elasticsearch, used substantially across the platform;
   Redis on an ElastiCache cluster, carrying caching and queues
-- **Compute and scaling:** self-managed Kubernetes rather than EKS, running on a
-  fleet of EC2 instances; Auto Scaling Groups for the web tier and for workers
-  scaled on Resque queue depth; multi-availability-zone throughout
+- **Web serving:** nginx
 - **Streaming and analytics:** Kinesis streams, Kinesis Data Analytics for
   windowed aggregations, Kinesis Firehose, and Amazon Redshift as the warehouse
-- **Testing:** Jest for Node.js
+- **Testing:** Jest for Node.js. On the serverless projects, unit tests ran
+  locally and a dedicated test environment was deployed during the build for
+  E2E and integration tests against real AWS - no local emulation of AWS
+  services. Developers could also deploy the stack to an environment of their
+  own when they needed one
 - **CI/CD:** CircleCI for continuous integration across the estate, with GitHub
-  Actions running tests and building artifacts on some of the newer services
-  towards the end of the tenure; deployment triggered from Slack through Hubot,
-  running on its own EC2 instance. Hubot executed Ansible playbooks to begin
-  with, and moved onto the internal CLI tools once Ansible was deprecated -
-  ChatOps throughout, rather than continuous deployment or a reconciliation loop
+  Actions running tests and building artifacts on some newer services towards
+  the end of the tenure; deployments triggered from Slack through Hubot, which
+  ran Ansible playbooks at first and the internal CLI tools once Ansible was
+  deprecated - ChatOps throughout, rather than continuous deployment or a
+  reconciliation loop
 - **Observability:** Prometheus for metrics and Loki for log aggregation, with
   Grafana and CloudWatch for dashboards; PagerDuty for alerting and paging,
   wired into provisioned infrastructure by default via the internal CDK
@@ -509,7 +540,11 @@ the time sprint planning took before and after estimation moved out of it.
   because the record should be complete, but a CV line spent on retired tooling
   buys nothing, and the Terraform bullet already says which resources stayed
   where. Bring the deprecation forward only for a spec naming Ansible or Puppet,
-  or one asking about consolidating a mixed IaC estate
+  or one asking about consolidating a mixed IaC estate. For a spec naming the
+  Serverless Framework, SAM or LocalStack, the evidence is the evaluation -
+  trialled hands-on, then CDK chosen, with testing against real AWS rather
+  than local emulation. That is a tool-selection story, not production use,
+  and the skills grid should not carry those tools as working ones
 - **The MongoDB cluster is the evidence for "operated, not consumed".** Platform
   and persistence specs increasingly draw that line in as many words, and
   DocumentDB, DynamoDB and RDS sit on the wrong side of it - the Multi-AZ
