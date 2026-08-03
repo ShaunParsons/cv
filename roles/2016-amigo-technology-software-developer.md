@@ -71,6 +71,7 @@ my work was building and maintaining services within that architecture.
 - **Datastores:** PostgreSQL, used heavily - substantial logic held in the
   database, including complex CTEs, stored functions and PL/pgSQL, tested with
   pgTAP
+- **Web serving:** nginx
 - **Third party:** Salesforce
 - **Architecture:** microservices
 - **Hosting and CI/CD:** Heroku, with CircleCI running from GitHub and a
