@@ -16,7 +16,7 @@ time and the HTML is a build step, not an artefact - see below.
 `qualifications.md` holds degrees, schooling and certifications.
 
 `profile.md` holds what a CV says about me that isn't tied to any one role -
-interests, direction, and the wording of the summary. The summary is the
+direction, tooling, and the wording of the summary. The summary is the
 highest-leverage paragraph on the page, so it gets a source file like everything
 else rather than being improvised each time.
 
@@ -66,13 +66,27 @@ stylesheet honest across the whole toolchain. It is also useful to open in a
 browser while iterating, since it reloads faster than the PDF - but the PDF is
 the thing that gets sent.
 
+## Deciding whether to apply
+
+`/assess-fit [job spec]` runs before either build step and feeds neither. It
+holds one spec against `roles/*.md` and reports which requirements are met with
+evidence, which are not, how far through the process the application is likely
+to get, and what the offer would be worth. It reads the same sources as
+`/generate-cv` via the same `scripts/fetch_spec.py`, so the two see an identical
+spec.
+
+**It writes nothing to disk, by design.** The assessment names requirements that
+aren't met and carries salary figures, and both are barred from this repo - see
+Conventions below. It lives in the conversation and ends there; there is no
+report file and no gitignored sidecar, and neither should be added.
+
 ## Writing style
 
 The facts in `roles/*.md` don't change between CVs. What changes is which of
 them lead, and the register they're written in. Below are the registers. Pick
 one from the job spec; when called bare, use **General**.
 
-Two rules hold across all of them:
+Five rules hold across all of them:
 
 - **Two pages, always.** Not two and a bit. `make` renders A4 and
   `pdfinfo dist/cv.pdf` is the arbiter. Fitting is a writing problem, not a
@@ -81,6 +95,30 @@ Two rules hold across all of them:
   line instead of two.
 - **Every bullet earns its line.** A bullet that could sit on any engineer's CV
   is taking space from one that couldn't.
+- **Parallel facts get parallel grammar.** Where one sentence carries several
+  achievements, they take the same shape - matched verbs in a series, not two
+  joined by "and" with a third hung off "alongside". The construction rules
+  under `## Voice` in `profile.md` are written for the summary but govern every
+  line on the page.
+- **Every bullet stands alone.** A bullet never leans on a neighbour for its
+  subject - "took the service on" with the antecedent a bullet away reads as
+  nothing to a reader skimming bullets out of order, which is how bullets are
+  read. Where several bullets tell one arc, nest it: the first names the
+  subject and holds the top level, and the rest indent beneath it, so the
+  structure carries the antecedent and a handle like "its" reads cleanly
+  because the parent is visibly the subject. Run the arc in the order it
+  happened either way.
+- **Compression never widens a claim.** Shortening a line must not grow what
+  it claims. "Designed its serverless migration" after naming the platform
+  and "designed a core microservice's migration onto serverless AWS" differ
+  by a few words and a whole achievement - and the pronoun or possessive is
+  where it slips, reaching back to a bigger object than the one the role file
+  records. When cutting for space, re-check every claim against the source's
+  scope. The summary is where this bites hardest, because it compresses the
+  most. The same care guards *who* a claim is about: dropping the "each" from
+  "each within about a year of that person joining" leaves the year reading
+  as mine rather than theirs. The small words that pin a reference are
+  usually the first cut for space, and the last that should be.
 
 ### General
 
@@ -174,7 +212,11 @@ as in every other, with no suggestion that AI had a hand in it.
 **Only in this register**, close the summary with a line noting that the CV
 itself is generated with Claude Code from a public repo, and link
 <https://github.com/ShaunParsons/cv>. It is a working sample, and in front of
-this audience that is the strongest single line on the page. In every other
+this audience that is the strongest single line on the page. Write it as a
+plain statement - name the tool, link the repo, stop. Do not call it a working
+sample or otherwise explain its own significance: the reader who clicks
+through reaches that conclusion themselves, and a line announcing it is the
+sentence watching itself work. In every other
 register it is a distraction and must not appear - do not link the repo, and do
 not mention how the CV was produced.
 
