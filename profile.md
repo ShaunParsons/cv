@@ -53,10 +53,10 @@ history, so attaching it to one would understate it.
 - **Linux, on Ubuntu** `#platform`
   - What: the daily driver throughout, and what the Kubernetes, Docker, Bash and
     DevOps claims elsewhere rest on
-  - On the CV: not a line worth spending a slot on. The platform work in
-    `roles/*.md` is the evidence, and it says the same thing with a named
-    consequence attached. Do not date it - a start year invites arithmetic and
-    reads as tenure rather than skill
+  - On the CV: listed in `competencies.md` as a working skill, so it can take
+    a grid slot where a spec names Linux. Elsewhere the platform work in
+    `roles/*.md` carries it with a named consequence attached. Do not date
+    it - a start year invites arithmetic and reads as tenure rather than skill
 
 - **Git, and a terminal-first environment** `#platform`
   - What: Git for version control; Vim as the editor and tmux for session and

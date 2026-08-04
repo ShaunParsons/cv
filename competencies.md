@@ -115,6 +115,8 @@ Infrastructure and operations:
 - **Terraform** - Talis Education (estate-wide resources)
 - **Kubernetes** - Talis Education (self-managed, whole-stack rollout)
 - **Docker** - Talis Education
+- **Linux** - `profile.md` (Ubuntu as the daily driver throughout), Talis
+  Education (the EC2 fleet and self-managed Kubernetes ran on it)
 - **nginx** - Talis Education, Amigo Technology
 - **Consul** - Talis Education (operated, not introduced)
 
