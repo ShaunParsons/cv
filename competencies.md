@@ -86,6 +86,8 @@ AWS:
 
 - **AWS Lambda**, **SQS & SNS**, **EventBridge** - Parsons Group, Talis
   Education
+- **API Gateway** - Talis Education (serverless APIs), Parsons Group (REST
+  APIs powering the front end)
 - **DynamoDB** (with Streams) - Parsons Group, Talis Education
 - **Kinesis** and **Redshift** - Talis Education (streaming analytics
   pipeline)

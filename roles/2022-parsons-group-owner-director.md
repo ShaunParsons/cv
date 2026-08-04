@@ -35,8 +35,10 @@ marketing, and the statutory finance side.
   - What: runs the business's social media presence and marketing automation -
     the LLM-generated publishing below, plus an integration with Klaviyo
   - Stack: Node.js backend, Vue.js front end, fully event-sourced
-  - Deployment: fully serverless on AWS - Cognito, Lambda, SQS, SNS, DynamoDB,
-    DynamoDB Streams, CloudFront, S3, EventBridge, CloudWatch, Secrets Manager
+  - Deployment: fully serverless on AWS - Cognito, API Gateway, Lambda, SQS,
+    SNS, DynamoDB, DynamoDB Streams, CloudFront, S3, EventBridge, CloudWatch,
+    Secrets Manager
+  - APIs: REST APIs on API Gateway power the front end
   - Messaging: command and notification topics for cross-service communication
   - Infrastructure: AWS CDK for infrastructure as code
   - Contribution: sole developer
@@ -137,9 +139,10 @@ marketing, and the statutory finance side.
 - **Languages and frameworks:** Node.js, Vue.js
 - **Architecture:** event sourcing / CQRS, using an own-authored library;
   event-driven cross-service messaging via command and notification topics
-- **Cloud:** AWS - Cognito, Lambda, SQS, SNS, DynamoDB, DynamoDB Streams,
-  CloudFront, S3, EventBridge, CloudWatch, Secrets Manager; RDS PostgreSQL
-  carried the read models before they moved onto DynamoDB
+- **Cloud:** AWS - Cognito, API Gateway (REST APIs powering the front end),
+  Lambda, SQS, SNS, DynamoDB, DynamoDB Streams, CloudFront, S3, EventBridge,
+  CloudWatch, Secrets Manager; RDS PostgreSQL carried the read models before
+  they moved onto DynamoDB
 - **Infrastructure as code:** AWS CDK
 - **Secrets management:** AWS Secrets Manager, used the same way as on the
   serverless projects at Talis Education

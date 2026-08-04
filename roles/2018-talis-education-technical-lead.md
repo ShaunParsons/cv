@@ -433,7 +433,8 @@ is the clearest evidence in the history of what the promotion was for.
   from)
 - **Frameworks and job processing:** Fat-Free Framework (F3) and Resque
   (php-resque) on the inherited extraction service, both migrated away from
-- **Cloud, compute and orchestration:** AWS, serverless, microservices;
+- **Cloud, compute and orchestration:** AWS, serverless, microservices, with
+  Amazon API Gateway fronting the serverless REST APIs;
   self-managed Kubernetes rather than EKS, on a fleet of EC2 instances; Auto
   Scaling Groups for the web tier and for workers scaled on Resque queue
   depth, multi-availability-zone throughout. On the inherited stack the Resque
