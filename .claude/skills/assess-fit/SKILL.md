@@ -1,7 +1,7 @@
 ---
 name: assess-fit
-description: Score roles/*.md against one job spec - which requirements are met with evidence, which are not, and calibrated estimates for a first-stage interview, a final interview, an offer, and what that offer would be worth. Use when the user asks how well they match a role, whether it is worth applying, what their chances are, where the gaps are, or what a role would pay. Takes a job spec URL, PDF or text file. Reports in conversation and writes nothing to disk.
-argument-hint: "[job spec URL | path to job spec PDF/txt]"
+description: Score roles/*.md against one job spec - which requirements are met with evidence, which are not, and calibrated estimates for a first-stage interview, a final interview, an offer, and what that offer would be worth. Use when the user asks how well they match a role, whether it is worth applying, what their chances are, where the gaps are, or what a role would pay. Takes a job spec URL, PDF, text file, or the spec text pasted directly. Reports in conversation and writes nothing to disk.
+argument-hint: "[job spec URL | path to job spec PDF/txt | pasted spec text]"
 allowed-tools: Read, Glob, Grep, Bash, WebFetch, WebSearch, AskUserQuestion
 ---
 
@@ -29,6 +29,16 @@ the same starting point:
 
 ```bash
 python3 scripts/fetch_spec.py "<ARGUMENT>" --out .job-spec.txt
+```
+
+Where the argument is the spec itself - pasted into the conversation rather
+than arriving as a URL or a path - pass `-` and feed the text in over stdin,
+verbatim and unedited:
+
+```bash
+python3 scripts/fetch_spec.py - --out .job-spec.txt <<'SPEC'
+<the pasted text>
+SPEC
 ```
 
 Called bare, there is nothing to assess against. Ask for a URL, a file, or

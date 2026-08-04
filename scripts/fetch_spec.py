@@ -9,6 +9,9 @@ arrived as.
     python3 scripts/fetch_spec.py https://example.com/jobs/123
     python3 scripts/fetch_spec.py ~/Downloads/role.pdf
     python3 scripts/fetch_spec.py spec.txt --out .job-spec.txt
+    python3 scripts/fetch_spec.py - --out .job-spec.txt <<'SPEC'
+    ...pasted spec text...
+    SPEC
 """
 
 from __future__ import annotations
@@ -98,13 +101,22 @@ def from_pdf(path: str) -> str:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("source", help="URL, PDF path, or plain text/markdown file")
+    ap.add_argument(
+        "source",
+        help="URL, PDF path, plain text/markdown file, or - to read stdin",
+    )
     ap.add_argument("--out", help="write here instead of stdout")
     args = ap.parse_args()
 
     src = os.path.expanduser(args.source)
 
-    if src.lower().startswith(("http://", "https://")):
+    if args.source == "-":
+        text = sys.stdin.read().strip()
+    elif "\n" in args.source:
+        # A filename never holds a newline, so multiline input is the spec
+        # itself, pasted as the argument rather than piped.
+        text = args.source.strip()
+    elif src.lower().startswith(("http://", "https://")):
         text = from_url(src)
     elif not os.path.exists(src):
         sys.exit(f"fetch_spec: no such file - {src}")
