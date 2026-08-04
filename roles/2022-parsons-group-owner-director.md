@@ -32,8 +32,8 @@ marketing, and the statutory finance side.
 
 - **Built an internal Event Sourced (CQRS) business dashboard** `#architecture`
   `#devops`
-  - What: integrates with multiple external systems to manage social media and
-    inventory management, including the four e-commerce channels below
+  - What: runs the business's social media presence and marketing automation -
+    the LLM-generated publishing below, plus an integration with Klaviyo
   - Stack: Node.js backend, Vue.js front end, fully event-sourced
   - Deployment: fully serverless on AWS - Cognito, Lambda, SQS, SNS, DynamoDB,
     DynamoDB Streams, CloudFront, S3, EventBridge, CloudWatch, Secrets Manager
@@ -42,10 +42,24 @@ marketing, and the statutory finance side.
   - Contribution: sole developer
   - Emphasise for: backend, platform, serverless, architecture, event-driven
 
+- **Built LLM-generated social publishing into the dashboard** `#architecture`
+  `#ai`
+  - What: post content generated with an LLM and published directly to
+    Facebook, Instagram, Twitter and Bluesky
+  - Klaviyo: integrated alongside the social channels, carrying the newsletter
+    campaigns and automated flows used across the business
+  - Why it matters: generative AI running in production and in daily business
+    use, not a prototype
+  - Contribution: sole developer
+  - Emphasise for: any spec naming LLMs, generative AI or shipped AI features;
+    marketing automation and social media tooling
+
 - **Integrated four e-commerce channels into one order and inventory flow**
   `#architecture` `#data`
   - Channels: Shopify, Etsy, eBay and Amazon
-  - Orders: pulled in from each channel into the dashboard
+  - Where: runs on an earlier system, separate from the event-sourced dashboard
+    above
+  - Orders: pulled in from each channel
   - Inventory: stock levels pushed back out to each channel, so what each one
     advertises follows what is actually held
   - Why it matters: four separate third-party APIs behind a single order and
@@ -132,10 +146,15 @@ marketing, and the statutory finance side.
 - **CI:** GitHub Actions, running the test suite
 - **Deployment:** released from my own machine rather than automatically on
   merge - GitHub Actions covers the tests, not the release
+- **AI:** LLM-generated post content, in production in the social publishing
+  above
+- **Social channels:** Facebook, Instagram, Twitter and Bluesky, published to
+  directly from the dashboard
 - **Marketing automation:** Klaviyo - campaigns and automated flows, used to run
   event promotion and trader communications
 - **E-commerce channels:** Shopify, Etsy, eBay and Amazon, integrated through
-  their APIs - orders pulled in, stock levels pushed back out
+  their APIs - orders pulled in, stock levels pushed back out, on a system
+  separate from the dashboard
 
 **Note:** the only role in the history with front-end work, and so the sole
 source of Vue.js.
@@ -144,6 +163,11 @@ source of Vue.js.
 
 - **Leads for hands-on roles:** the event-sourced serverless dashboard - it is
   the strongest evidence of recent, current-stack production work
+- **The LLM social publishing is the shipped-AI evidence in the history.**
+  Specs asking for AI or LLM features in production are answered here; the
+  AI-assisted development register in `CLAUDE.md` covers how software is
+  built, and this covers what was built. The bullet says which channels and
+  stops - the model behind it is not recorded, so no CV line should name one
 - **Framing:** at two directors and two contractors this is evidence of
   *breadth* and self-direction rather than headcount - but it does carry
   genuine supplier, venue and contractor management, which the technical roles
