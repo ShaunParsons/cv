@@ -15,6 +15,11 @@ time and the HTML is a build step, not an artefact - see below.
 
 `qualifications.md` holds degrees, schooling and certifications.
 
+`competencies.md` holds the supersets behind the `Key Competencies` and
+`Technical Skills` grids, every item traced to a role file. The grids select
+from it rather than being improvised per generation - a skill that is not in
+it does not go on a CV.
+
 `profile.md` holds what a CV says about me that isn't tied to any one role -
 direction, tooling, and the wording of the summary. The summary is the
 highest-leverage paragraph on the page, so it gets a source file like everything
