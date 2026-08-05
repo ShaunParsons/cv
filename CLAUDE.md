@@ -177,6 +177,19 @@ the blameless reviews belong high. Attribution matters most in this register:
 these are exactly the achievements where leading and deciding are easy to blur,
 so `Contribution:` governs the wording without exception.
 
+Headcount is evidence here, not detail. State the team size and the
+direct-report split explicitly, in the summary as well as the role history - a
+recruiter screening for a lead role looks for the numbers in both places and
+does not go hunting for them. The management thread should also run to the
+present rather than stopping at the last employer: where the most recent role
+carries people evidence - the external contractors at Parsons Group - it earns
+a line, because a lead-role screen reads a management gap in the current role
+as a step back to IC. And when the title being screened for is explicitly a
+lead one - "Engineering Lead", "Technical Lead" in the job title - tip further
+than this register's default: the people and delivery bullets open each role
+ahead of the technical arcs, and `Key Competencies` orders leadership first, so
+the first row of the grid answers the title.
+
 ### Head of engineering / founder / early startup
 
 Weighted to ownership and to operating without scaffolding. Lead with what was
