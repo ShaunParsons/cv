@@ -195,6 +195,11 @@ is the clearest evidence in the history of what the promotion was for.
 - **Led the Kubernetes rollout across the entire tech stack** `#devops`
   `#architecture`
   - Outcome: implemented across the whole stack, completed during my tenure
+  - Impact: scaling moved from manual to automatic on demand for the majority
+    of services, which raised utilisation of the underlying EC2 fleet, reduced
+    infrastructure costs, and cut the effort spent managing the
+    infrastructure. Deployment frequency improved, letting teams ship more
+    often
   - Platform: self-managed clusters, not EKS
   - Contribution: led the implementation across the estate. The decision to
     adopt Kubernetes was taken before I became technical lead
@@ -495,8 +500,10 @@ is the clearest evidence in the history of what the promotion was for.
 
 **Figures not available:** interviews conducted, incident volumes, the cost
 saving on the PHP to serverless migration, how long the extraction service had
-gone without active development, any throughput or corpus figures for it, and
-the time sprint planning took before and after estimation moved out of it.
+gone without active development, any throughput or corpus figures for it, the
+time sprint planning took before and after estimation moved out of it, and the
+deployment-frequency, utilisation and cost gains from the Kubernetes rollout -
+those outcomes are confirmed but were never measured.
 
 ## Tailoring notes
 
