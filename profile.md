@@ -16,6 +16,8 @@ role file behind it. This is that file.
 ## Position
 
 - **Returning to full-time software roles.** `#direction`
+  - Wording: where the summary carries this, phrase it as "looking at
+    returning to a full-time software role" - looking at, and the singular
   - Context: ran Parsons Group Limited full-time from April 2023, having started
     it alongside Talis Education in April 2022
   - What stayed true throughout: continued to design and ship production
