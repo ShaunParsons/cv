@@ -126,13 +126,19 @@ marketing, and the statutory finance side.
   - Emphasise for: delivery and programme management, operations, roles needing
     evidence of coordinating people outside your own reporting line
 
-- **Engaged and manage two contractors** `#leadership`
-  - Scope: one covering finances, one covering general admin including social
-    media
+- **Engaged and manage a team of external contractors** `#leadership`
+  - Scope: various parts of the business - one contractor covering finances,
+    one covering general admin including marketing and social media, and
+    further contractors brought in to staff the markets above, the event
+    manager among them
   - Contribution: engaged them and manage them directly
   - Note: the first time I have managed contractors rather than employees
-  - Emphasise for: engineering management, roles involving outsourced or
-    contract resource
+  - Wording: on a CV this carries as "managed a team of external contractors
+    working on various parts of the business, including marketing, social
+    media and finance"
+  - Emphasise for: engineering management, technical lead and above, roles
+    involving outsourced or contract resource - management evidence that runs
+    to the present rather than stopping at the last employer
 
 ## Technical surface
 
