@@ -3,8 +3,11 @@
    WeasyPrint renders the PDF from the very same HTML the browser gets, so the
    two outputs cannot drift. Any change here must be checked against BOTH.
 
-   The type scale, palette and geometry below were measured off the 2026-07-25
-   Google Docs CV so the generated document reads as the same document.
+   The type scale and geometry below were measured off the 2026-07-25 Google
+   Docs CV so the generated document reads as the same document. The palette
+   has since departed from it deliberately: the name runs in ink rather than
+   grey, and the body grey is darker than the source's, for legibility in
+   print and scans.
    --------------------------------------------------------------------------- */
 
 @font-face {
@@ -30,9 +33,11 @@
 
 :root {
   /* Palette, sampled from the source PDF. */
-  --ink:      #000000;  /* section and role headings */
-  --name:     #424242;  /* the name in the masthead */
-  --body:     #666666;  /* body copy, bullets, dates */
+  --ink:      #000000;  /* section and role headings, and the name */
+  --name:     #000000;  /* no lighter than the headings - the name is the one
+                           string the page exists to make memorable */
+  --body:     #4a4a4a;  /* body copy, bullets, dates - dark enough to survive
+                           printing and scanning at 9pt */
   --accent:   #dc952c;  /* the two masthead rules */
 
   /* Type scale. */

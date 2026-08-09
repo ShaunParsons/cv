@@ -1,13 +1,14 @@
 ---
 name: generate-cv
-description: Write cv.md from roles/*.md, qualifications.md and profile.md - generic when called bare, or tailored to a job spec when given a URL, a PDF or a text file. Use when the user asks to generate, write, tailor or refresh their CV, or asks for a CV for a particular job or company. Stops at cv.md; rendering to PDF is `make`.
+description: Write cv.md from roles/*.md, qualifications.md, profile.md and competencies.md - generic when called bare, or tailored to a job spec when given a URL, a PDF or a text file. Use when the user asks to generate, write, tailor or refresh their CV, or asks for a CV for a particular job or company. Stops at cv.md; rendering to PDF is `make`.
 argument-hint: "[job spec URL | path to job spec PDF/txt]"
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, WebFetch
 ---
 
 # generate-cv
 
-Turn `roles/*.md`, `qualifications.md` and `profile.md` into `cv.md`.
+Turn `roles/*.md`, `qualifications.md`, `profile.md` and `competencies.md`
+into `cv.md`.
 
 **This skill stops at `cv.md`.** It does not build the deliverable PDF. The user
 reviews and edits `cv.md`, then runs `make` themselves. Do not run `make` on
@@ -45,9 +46,10 @@ towards hands-on engineering, leadership, or both.
 
 ### 2. Read the sources
 
-Read **every** file in `roles/`, plus `qualifications.md` and `profile.md`. Do
-not work from a subset, and do not work from a previously generated `cv.md` - it
-is output, and tailoring from it compounds whatever the last pass dropped.
+Read **every** file in `roles/`, plus `qualifications.md`, `profile.md` and
+`competencies.md`. Do not work from a subset, and do not work from a previously
+generated `cv.md` - it is output, and tailoring from it compounds whatever the
+last pass dropped.
 
 `profile.md` is where the summary comes from: the direction and the wording to
 keep. Everything in the summary traces back to it or to a role file, the same as
@@ -110,9 +112,10 @@ of the four compress to two or three lines rather than disappearing. Reorder
 bullets *within* a role freely. Never reorder the roles themselves: they are
 reverse-chronological and stay that way.
 
-Adjust `Key Competencies` and `Technical Skills` to the spec, but only ever by
-selecting from what the source files support. A skill that appears in no role
-file does not go on the CV.
+Adjust `Key Competencies` and `Technical Skills` to the spec by selecting from
+`competencies.md` - it is the superset, every item already traced to a role
+file, with an exposure list that must never reach the grid. Use the item names
+as written there. A skill that is not in it does not go on the CV.
 
 ### 4. Write `cv.md`
 
