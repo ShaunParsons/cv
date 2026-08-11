@@ -74,6 +74,18 @@ Bounded: coverage moves the estimate by up to about 3x in either direction, not
 more - a candidate meeting every must-have still faces a pool of others who do
 too.
 
+Match enumerated requirements literally, attribution included. Where a spec
+itemises a requirement into named components - management broken out into
+promotions, hiring decisions, managing underperformers, compensation
+decisions, a minimum tenure - each component is matched against the record on
+its own, and only evidence with matching ownership meets it: a review cycle
+run jointly, or a hiring decision taken collectively, is a partial for a
+component that asks for the decision to have been the candidate's. Adjacent
+leadership does not cover the components it does not name, and a spec that
+itemises this way is usually screening for someone who has already operated
+the whole list independently - treat "led a team" as covering it and the
+estimate inherits the gap.
+
 **Pool and competition.** Applicant tracking systems rank *relative to the
 applicant pool*, not against a fixed threshold, so the same application is
 strong for a niche role and invisible for an advertised generalist one. Widely

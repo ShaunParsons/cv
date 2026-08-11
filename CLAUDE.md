@@ -54,7 +54,8 @@ make check   # validate cv.md without rendering
 make pages   # render and fail unless the PDF is exactly two pages
 make html    # dist/index.html
 make pdf     # dist/cv.pdf
-make dated   # dist/CV-Shaun-Parsons-YYYY-MM-DD.pdf, for attaching
+make dated   # dist/CV-Shaun-Parsons[-Company]-YYYY-MM-DD.pdf, for attaching -
+             # the company comes from cv.md's tailored-for line when there is one
 make         # all of the above - the dated copy is the default, because it
              # is the file that actually gets attached to an application
 make clean   # remove dist/
@@ -190,6 +191,42 @@ than this register's default: the people and delivery bullets open each role
 ahead of the technical arcs, and `Key Competencies` orders leadership first, so
 the first row of the grid answers the title.
 
+### Engineering manager
+
+For roles titled Engineering Manager, or any spec that weights people
+management above architecture. The technical lead register tips towards
+technical decisions and their consequences; this one tips towards people
+decisions and theirs. A manager screen reads the CV against a checklist -
+promotions, hiring, performance management, breadth across teams or
+workstreams - and treats everything else as background, so the people
+evidence opens every role that carries any, with its numbers stated: the
+team of six with its direct-report split, the two promotions routed through
+sprint planning, the hiring decisions taken collectively by the interviewing
+team, the one-to-ones owned outright with reviews run jointly with the CTO.
+
+Attribution carries more weight here than in any other register, including
+technical lead. A manager screen reads "jointly" and "collectively"
+literally, which is exactly why those words must be written: a shared
+decision stated as shared is evidence, while the same decision stated
+without its attribution is a question saved up for the interview.
+
+Two selection tests sharpen further in this register. Prefer the bullet
+showing a judgement made against the grain of its context over one showing
+a practice applied - the case that a developer should ship on day one, the
+estimation moved out of sprint planning, the tooling deliberately handed
+away - because a manager screen discounts inherited process and looks for
+decisions that were nobody else's recipe. Prefer scope that crossed the
+team boundary, stated as such - the 24x7 rota of ten spanning beyond the
+team of six, the upskilling of a development team of 30 - because
+manager specs routinely ask for multiple teams or concurrent workstreams,
+and cross-team scope buried inside a single-team bullet answers neither.
+
+Technical depth compresses but does not disappear: as in the project
+management register, it is evidence of credibility with engineers rather
+than the substance. The management thread runs to the present, as in the
+technical lead register, and the summary states the headcount and
+direct-report split alongside the role history.
+
 ### Head of engineering / founder / early startup
 
 Weighted to ownership and to operating without scaffolding. Lead with what was
@@ -227,10 +264,10 @@ be. The event-sourcing library in particular predates all of this and is
 ordinary engineering; it belongs on the CV on its own merits, in this register
 as in every other, with no suggestion that AI had a hand in it.
 
-**Only in this register**, close the summary with a line noting that the CV
-itself is generated with Claude Code from a public repo, and link
-<https://github.com/ShaunParsons/cv>. It is a working sample, and in front of
-this audience that is the strongest single line on the page. Write it as a
+**Only in this register**, close the summary with this line, verbatim: *"This
+CV is generated with Claude Code from a publicly available GitHub repository,
+<https://github.com/ShaunParsons/cv>."* It is a working sample, and in front of
+this audience that is the strongest single line on the page. It is a
 plain statement - name the tool, link the repo, stop. Do not call it a working
 sample or otherwise explain its own significance: the reader who clicks
 through reaches that conclusion themselves, and a line announcing it is the

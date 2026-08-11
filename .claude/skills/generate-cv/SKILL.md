@@ -92,12 +92,12 @@ handing over rather than silently widening the CV.
 - **Two pages.** Never one, never three. See below - it governs how much of
   everything else survives.
 
-**Pick a register.** `CLAUDE.md` defines six - General, Senior developer,
-Technical lead, Head of engineering / founder / early startup, Project
-management, and AI-assisted development. Read that section and choose from the
-job spec's title and weighting; bare invocations get General. The register
-decides what leads each role and what gets trimmed, so choose before writing a
-line, and name your choice when handing over.
+**Pick a register.** `CLAUDE.md` defines seven - General, Senior developer,
+Technical lead, Engineering manager, Head of engineering / founder / early
+startup, Project management, and AI-assisted development. Read that section
+and choose from the job spec's title and weighting; bare invocations get
+General. The register decides what leads each role and what gets trimmed, so
+choose before writing a line, and name your choice when handing over.
 
 The AI-assisted register is the only one that mentions how this CV is produced
 or links the repo. Do not carry that line into any other register, however well

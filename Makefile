@@ -133,9 +133,17 @@ pages: pdf
 	  echo "$$n pages, expected $(PAGES). Trim or expand cv.md; do not change" >&2; \
 	  echo "style.css to make it fit." >&2; exit 1; fi
 
+# The dated copy carries the target company where cv.md is tailored, taken
+# from the `tailored-for` front matter ("<role> at <company>"), so dist/
+# doubles as a record of which application each PDF was generated for. A
+# generic CV, or a tailored-for line with no " at ", falls back to the plain
+# dated name.
 dated: pdf
-	@cp $(DIST)/cv.pdf "$(DIST)/CV-Shaun-Parsons-$$(date +%Y-%m-%d).pdf"
-	@echo "built $(DIST)/CV-Shaun-Parsons-$$(date +%Y-%m-%d).pdf"
+	@company=$$(sed -n 's/^tailored-for:[[:space:]]*//p' $(SRC) | head -1 \
+	  | tr -d '"' | sed -n 's/.* at //p' | tr ' ' '-' | tr -cd 'A-Za-z0-9-'); \
+	out="$(DIST)/CV-Shaun-Parsons-$${company:+$$company-}$$(date +%Y-%m-%d).pdf"; \
+	cp $(DIST)/cv.pdf "$$out"; \
+	echo "built $$out"
 
 # --- housekeeping ----------------------------------------------------------
 
