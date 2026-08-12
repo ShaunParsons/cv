@@ -15,16 +15,8 @@ $endif$
 
 <header class="masthead">
   <h1>$name$</h1>
-  <div class="rule"></div>
   <div class="contact">
-$if(address)$
-    <p>$address$</p>
-$endif$
-$if(phone)$
-    <p>$phone$ ~ <a href="mailto:$email$">$email$</a></p>
-$else$
-    <p><a href="mailto:$email$">$email$</a></p>
-$endif$
+    <p>$if(address)$$address$ - $endif$$if(phone)$$phone$ - $endif$<a href="mailto:$email$">$email$</a></p>
   </div>
   <div class="rule"></div>
 </header>

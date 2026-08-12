@@ -47,7 +47,6 @@
   --size-body:     9pt;
 
   --leading-body: 1.41;  /* 12.7pt on 9pt, as measured */
-  --leading-grid: 1.17;  /* 10.5pt on 9pt - the competency columns run tighter */
 
   /* Bullet geometry. One indent step per nesting level. */
   --indent-step:  18pt;
@@ -94,13 +93,13 @@ body {
   font-size: var(--size-name);
   font-weight: 400;              /* the source sets the name in regular */
   line-height: 1.15;
-  margin: 0 0 10pt;
+  margin: 0;
 }
 
-/* The two accent rules. Measured at 3.4pt deep and 80% of the text column,
-   centred - close enough to identical that the eye reads it as the same rule. */
+/* The accent rule under the contact line, closing the masthead - 3.4pt deep
+   and the full width of the text column. */
 .masthead .rule {
-  width: 80%;
+  width: 100%;
   height: 3.4pt;
   margin: 0 auto;
   background: var(--accent);
@@ -108,18 +107,20 @@ body {
 
 .masthead .contact {
   margin: 0;
-  padding: 8pt 0;
+  padding: 2pt 0 8pt;   /* tight under the name, room above the rule */
 }
 
 .masthead .contact p {
   margin: 0;
-  padding: 3pt 0;
+  padding: 0;
 }
 
 /* --- Summary ------------------------------------------------------------- */
 
+/* No margin of its own: the heading above it supplies the gap, the same
+   12pt every section heading gives its content. */
 .summary {
-  margin: 13pt 0 0;
+  margin: 0;
 }
 
 .summary p {
@@ -133,12 +134,18 @@ h2 {
   font-size: var(--size-section);
   font-weight: 700;
   line-height: 1.2;
-  text-align: center;
+  text-align: left;
   text-transform: uppercase;
-  margin: 26pt 0 12pt;
+  margin: 26pt 0 6pt;
   /* Never leave a section heading stranded at the foot of a page. */
   break-after: avoid;
   break-inside: avoid;
+}
+
+/* The first heading follows the masthead's rule, which provides its own
+   separation - the full inter-section gap on top of it reads as a hole. */
+.masthead + h2 {
+  margin-top: 13pt;
 }
 
 /* --- Role and qualification headings ------------------------------------- */
@@ -153,6 +160,12 @@ h3 {
   break-inside: avoid;
 }
 
+/* The first role under a section heading: the 18pt above is inter-role
+   spacing, and the section heading's own 6pt gap replaces it here. */
+h2 + h3 {
+  margin-top: 0;
+}
+
 /* "Company, Location - *Job Title*" - the title carries the emphasis and drops
    back to regular weight, which is what the source document does. */
 h3 em {
@@ -160,13 +173,33 @@ h3 em {
   font-style: italic;
 }
 
-/* The date line: the paragraph immediately after a role heading. */
+/* The date line: the paragraph immediately after a role heading. Set right
+   and pulled up onto the heading's own line, so heading and dates share a
+   line with the dates in a column down the right margin. The negative margin
+   is the heading's 13.2pt line box less a baseline nudge for the smaller
+   date type - re-check the PDF if the h3 metrics change. */
 h3 + p {
   color: var(--body);
   font-size: var(--size-body);
-  margin: 6pt 0 0;
+  margin: -12.6pt 0 0;
+  line-height: 1.2;
+  text-align: right;
   break-before: avoid;
   break-after: avoid;
+}
+
+/* A role heading repeated at the top of a page when the role's bullets run
+   over the break. It never appears in cv.md - scripts/render_pdf.py injects
+   it at render time, because only the renderer knows where the break falls.
+   The forced break is what pins it to the top of the page; the zero top
+   margin is what keeps it flush there. */
+h3.continued {
+  break-before: page;
+  margin-top: 0;
+}
+
+h3.continued .continued-marker {
+  font-weight: 400;
 }
 
 /* --- Lists --------------------------------------------------------------- */
@@ -236,21 +269,16 @@ li {
 
 /* --- Competency / skill grids -------------------------------------------- */
 
-/* Three columns, matching the borderless 3-column table in the source. */
+/* Labelled lines - a bold group label, then its items comma-separated - run
+   at the full measure rather than in columns. A columned list extracts badly:
+   an ATS reads the text back spatially, and adjacent columns' items run
+   together into one string. A full-width line extracts as written. */
 .grid ul {
-  column-count: 3;
-  column-gap: 18pt;
-  line-height: var(--leading-grid);
-  padding-left: 23pt;
   margin: 0;
 }
 
 .grid li {
   break-inside: avoid;
-}
-
-.grid li::before {
-  top: 3.4pt;
 }
 
 /* --- Print-only refinements ---------------------------------------------- */

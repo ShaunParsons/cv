@@ -63,6 +63,14 @@ Each role file carries tailoring metadata that tells you what to do:
 - `Contribution:` - who did what. This governs how the bullet is worded.
 - `Metric:` - a confirmed number. Use it. If there is no metric, there is no
   number - see the rules below.
+- `On a CV:` - a decision already taken about whether the bullet reaches the
+  page, and it binds. Where it says not selected, the reason given binds with
+  it. Some of these hold back material that reads well in an interview and
+  badly in a scan - a recovered production incident, a proposal that never
+  shipped - so a generation that finds one compelling and uses it anyway has
+  done the specific harm the marker exists to prevent. Where it says "not
+  selected by default", the exception named there is the only route onto the
+  page.
 - `## Tailoring notes` - read these last and take them seriously; they encode
   decisions already made about how the material should be presented.
   `profile.md` and `qualifications.md` carry a section under the same heading,
@@ -117,6 +125,14 @@ Adjust `Key Competencies` and `Technical Skills` to the spec by selecting from
 file, with an exposure list that must never reach the grid. Use the item names
 as written there. A skill that is not in it does not go on the CV.
 
+**Coverage pass.** Before writing, hold the spec's must-have list against the
+selection: every requirement the evidence meets should have its literal term
+on the page, in the spec's own vocabulary - a grid item or a bullet, wherever
+it sits naturally. AI-assisted screening reads the application against the
+spec's criteria and looks for quotable evidence, so a met requirement whose
+term never appears reads as unmet. This never licenses a claim the sources do
+not carry: the term takes a slot only where the evidence already exists.
+
 ### 4. Write `cv.md`
 
 Follow this structure exactly - `style.css` keys off it, and
@@ -128,6 +144,8 @@ name: Shaun Parsons
 tailored-for: "Staff Engineer at Example Ltd"   # omit or "" when generic
 ---
 
+## Professional Summary
+
 ::: summary
 Two or three sentences. In tailored mode this is the highest-leverage paragraph
 on the page - it should read as though written for this role.
@@ -136,13 +154,15 @@ on the page - it should read as though written for this role.
 ## Key Competencies
 
 ::: grid
-- Twelve or so items, flat list, no nesting
+- **Leading:** Item, Item, Item - a bold group label, items comma-separated
+- **Building:** three or four such lines, flat list, no nesting
 :::
 
 ## Technical Skills
 
 ::: grid
-- Twelve or so items, flat list, no nesting
+- **Languages & Data:** Item, Item, Item
+- **AWS:** three or four such lines, flat list, no nesting
 :::
 
 ## Professional Experience
@@ -151,9 +171,8 @@ on the page - it should read as though written for this role.
 
 Month Year - Month Year
 
-- Top-level achievement.
-    - Supporting detail, indented four spaces.
-        - Third level exists but is rarely worth it.
+- One achievement per bullet, and every bullet at this level - never nested.
+- The next step of the same arc, as its own bullet, naming its subject again.
 
 ## Qualifications
 
@@ -170,12 +189,21 @@ Hard structural requirements:
   address and phone are injected at render time from `$CV_ADDRESS` and
   `$CV_PHONE`, and the email is set in the `Makefile`.
 - Exactly one `::: summary` block.
-- `:::grid` takes a **flat** list. A nested bullet inside one breaks the
-  three-column layout.
+- `:::grid` takes a **flat** list of labelled lines - `**Label:** Item,
+  Item, ...`, no nesting. The lines run full-width and may wrap; the label is
+  what keeps a line legible when an applicant tracking system parses the PDF.
+  Use the item names as `competencies.md` writes them; the group labels lean
+  on its groupings but may be regrouped to answer the spec.
 - Every heading under Professional Experience is
   `### Company, Location - *Job Title*` with the title in italics, followed by
   a date line as an ordinary paragraph. Both parts are load-bearing: the
   stylesheet styles the paragraph after a role heading as the dates.
+- Bullets are **single-tier**, everywhere. An applicant tracking system strips
+  indentation from the extracted text, so a sub-bullet arrives as a top-level
+  claim with its parent gone. An arc runs as consecutive bullets in the order
+  it happened, each naming its own subject - `CLAUDE.md`'s "Every bullet
+  stands alone" rule governs the wording, and `scripts/validate_cv.py` warns
+  on a nested bullet.
 - No `#` in the body - the masthead comes from the template. No `####` or
   deeper.
 
@@ -229,7 +257,8 @@ structured this way. Re-read that file if anything below is unclear.
   the implementation"*.
 - **Never write a weakness the spec did not ask about.** No "the shortest
   role", no "explains the gap". Where something was never established, leave
-  it out.
+  it out. `On a CV: not selected` is the same rule already applied to a
+  specific bullet by someone who knew the context - do not re-open it.
 - **Nothing private.** No compensation, no reasons for leaving, no named
   criticism of former employers, no home address or phone number. The repo is
   public; treat every file in it as already on the internet.

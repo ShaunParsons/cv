@@ -49,6 +49,10 @@ EMAIL := cv@shaunparsons.co.uk
 PANDOC     := $(shell command -v pandoc 2>/dev/null || echo $$HOME/.local/bin/pandoc)
 WEASYPRINT := $(shell test -x $(VENV)/bin/weasyprint && echo $(VENV)/bin/weasyprint || command -v weasyprint 2>/dev/null)
 PYTHON     := $(shell command -v python3 2>/dev/null)
+# The PDF renderer uses WeasyPrint's Python API rather than its CLI, so it
+# needs a python that can import weasyprint - the venv's, or the one whose
+# site-packages backs a weasyprint found on PATH.
+RENDER_PY  := $(shell test -x $(VENV)/bin/python && echo $(VENV)/bin/python || command -v python3 2>/dev/null)
 
 # Home address and phone are read from the environment at render time and are
 # never committed. An unset variable simply omits the line, so a render on a
@@ -116,8 +120,22 @@ PDFINFO := $(shell command -v pdfinfo 2>/dev/null)
 count_pages = $$($(PDFINFO) $(DIST)/cv.pdf | awk '/^Pages:/ {print $$2}')
 
 # The PDF is rendered from the built HTML, not from cv.md again.
+#
+# scripts/render_pdf.py wraps WeasyPrint's API rather than shelling out to its
+# CLI, for two things the CLI cannot do:
+#
+#   - When a role's bullets run over the page break, it repeats the role
+#     heading at the top of the new page with "(Continued)" - a render-time
+#     concern, since only the renderer knows where the break falls, so neither
+#     cv.md nor /generate-cv is aware of pagination.
+#   - pdf/ua-1 emits a tagged PDF: a structure tree of real H1/H2/H3, P and
+#     L/LI/LBody elements alongside the page content. Untagged, anything
+#     reading the file back - an applicant tracking system parsing it into
+#     fields, a screen reader - has only glyph positions to go on and
+#     reconstructs the reading order by guesswork. Tagged, the order and the
+#     nesting are stated. It costs about 3KB and changes not a pixel.
 pdf: html _require-weasyprint
-	@$(WEASYPRINT) $(DIST)/index.html $(DIST)/cv.pdf
+	@$(RENDER_PY) scripts/render_pdf.py $(DIST)/index.html $(DIST)/cv.pdf
 	@echo "built $(DIST)/cv.pdf"
 	@if [ -n "$(PDFINFO)" ]; then n=$(call count_pages); \
 	  [ "$$n" = "$(PAGES)" ] || \

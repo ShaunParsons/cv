@@ -72,6 +72,13 @@ stylesheet honest across the whole toolchain. It is also useful to open in a
 browser while iterating, since it reloads faster than the PDF - but the PDF is
 the thing that gets sent.
 
+When a role's bullets run over the page break, the render repeats the role
+heading at the top of the new page with `(Continued)`, so the page opens with
+its subject named - on the page and in the extracted text alike.
+`scripts/render_pdf.py` injects it at render time, because only the renderer
+knows where the break falls: the heading never appears in `cv.md`, and
+`/generate-cv` stays ignorant of pagination.
+
 ## Deciding whether to apply
 
 `/assess-fit [job spec]` runs before either build step and feeds neither. It
@@ -106,14 +113,27 @@ Five rules hold across all of them:
   joined by "and" with a third hung off "alongside". The construction rules
   under `## Voice` in `profile.md` are written for the summary but govern every
   line on the page.
-- **Every bullet stands alone.** A bullet never leans on a neighbour for its
-  subject - "took the service on" with the antecedent a bullet away reads as
-  nothing to a reader skimming bullets out of order, which is how bullets are
-  read. Where several bullets tell one arc, nest it: the first names the
-  subject and holds the top level, and the rest indent beneath it, so the
-  structure carries the antecedent and a handle like "its" reads cleanly
-  because the parent is visibly the subject. Run the arc in the order it
-  happened either way.
+- **Every bullet stands alone, and bullets run single-tier.** A bullet never
+  leans on a neighbour for its subject - "took the service on" with the
+  antecedent a bullet away reads as nothing to a reader skimming bullets out
+  of order, which is how bullets are read. Where several bullets tell one
+  arc, run it as consecutive top-level bullets in the order it happened: the
+  first names the subject, and each later line carries a handle that names
+  it again - "that service's migration", never a bare "its".
+
+  Nesting used to carry the arc instead, and was dropped because the indent
+  does not survive extraction. Extract the text from the PDF - which is what
+  an applicant tracking system parses into fields, and what an AI screen
+  reads - and the nesting is gone: the markers are drawn as shapes rather
+  than set as glyphs, so a role comes back as a flat run of lines with no
+  indentation and no bullet characters at all, and a sub-bullet arrives
+  there as a top-level claim with its parent stripped away. Single-tier
+  bullets make the page and the extraction the same document, so what reads
+  cleanly on one reads cleanly on the other. The handle is where the care
+  goes: "designed its migration onto serverless AWS" becomes "designed a
+  core microservice's migration onto serverless AWS" - which is the rule
+  below arriving from the other direction, since the handle that widens a
+  claim when compressed is the same handle that empties it when flattened.
 - **Compression never widens a claim.** Shortening a line must not grow what
   it claims. "Designed its serverless migration" after naming the platform
   and "designed a core microservice's migration onto serverless AWS" differ
@@ -171,12 +191,37 @@ hard; they read as a candidate aiming past the job.
 
 The general register with the balance tipped towards decisions and their
 consequences. Lead with what was designed, chosen or introduced, and what
-followed - the PHP-to-serverless migration design, the CDK constructs library,
-the Kubernetes rollout. Keep enough implementation detail to stay credible
-hands-on, because the role is both. Incident management, the on-call rota and
-the blameless reviews belong high. Attribution matters most in this register:
-these are exactly the achievements where leading and deciding are easy to blur,
-so `Contribution:` governs the wording without exception.
+followed - the PHP-to-serverless migration design, and the CDK constructs
+library with the six services and the whole 30-strong development team that took it
+up. The uptake is the "what followed" and belongs in the bullet: a library
+nobody adopted would read identically without it.
+Keep enough implementation detail to stay credible hands-on, because the role is
+both. Incident management, the on-call rota and the blameless reviews belong
+high. Attribution matters most in this register: these are exactly the
+achievements where leading and deciding are easy to blur, so `Contribution:`
+governs the wording without exception. The Kubernetes rollout is the case in
+point and belongs in a different sentence from the three above - the decision
+predates the title and was somebody else's, the delivery is the claim, and a
+register that leads on "chose" would put the wrong verb on the strongest
+infrastructure work in the role.
+
+State the consequence the business felt, not the one the system did. Nearly
+every technical outcome in the role files has a business-side statement
+available, and it is almost always the stronger of the two. The multi-region
+deployment is not "deployed across two regions", it is what let the company
+promise in-region data and sell into North America. The Kubernetes rollout's
+autoscaling is higher utilisation of the fleet, lower infrastructure cost and
+more frequent shipping. 99.99% is a tenth of the downtime the contract allowed,
+which is the SLA stated as the customer reads it rather than as a monitoring
+dashboard does. Where a bullet carries both, the technical detail is there to
+make the business claim credible - it is the evidence, not the claim.
+
+This never licenses a bigger number than the sources hold, and the arithmetic
+is where that slips. A meeting cut from 90 minutes to 20 did not return 70
+minutes to anyone, because it also began running more often; the honest claim
+is the length, not a saving derived from it. Multiplying a per-occurrence
+figure by a headcount or a frequency invents a total that no source confirms,
+and a total is exactly what an interviewer will ask you to substantiate.
 
 Headcount is evidence here, not detail. State the team size and the
 direct-report split explicitly, in the summary as well as the role history - a
@@ -200,9 +245,13 @@ decisions and theirs. A manager screen reads the CV against a checklist -
 promotions, hiring, performance management, breadth across teams or
 workstreams - and treats everything else as background, so the people
 evidence opens every role that carries any, with its numbers stated: the
-team of six with its direct-report split, the two promotions routed through
-sprint planning, the hiring decisions taken collectively by the interviewing
-team, the one-to-ones owned outright with reviews run jointly with the CTO.
+team of six with its direct-report split, the one-to-ones held weekly to
+fortnightly and owned outright with reviews run jointly with the CTO, the two
+promotions routed through sprint planning, the hiring panel of six where a no
+from any single member was decisive, and the incident review taken from 90
+minutes to 20. The last two carry numbers on people decisions rather than on
+systems, which is the currency this screen counts in and the scarcest thing in
+the role files - reach for them before reaching for a technical metric.
 
 Attribution carries more weight here than in any other register, including
 technical lead. A manager screen reads "jointly" and "collectively"
@@ -213,13 +262,24 @@ without its attribution is a question saved up for the interview.
 Two selection tests sharpen further in this register. Prefer the bullet
 showing a judgement made against the grain of its context over one showing
 a practice applied - the case that a developer should ship on day one, the
-estimation moved out of sprint planning, the tooling deliberately handed
+estimation moved out of sprint planning, the business's interruptions taken
+onto the lead rather than left on the team, the tooling deliberately handed
 away - because a manager screen discounts inherited process and looks for
 decisions that were nobody else's recipe. Prefer scope that crossed the
 team boundary, stated as such - the 24x7 rota of ten spanning beyond the
-team of six, the upskilling of a development team of 30 - because
+team of six, the upskilling of a development team of 30, the constructs
+library adopted by that whole team rather than only by mine - because
 manager specs routinely ask for multiple teams or concurrent workstreams,
 and cross-team scope buried inside a single-team bullet answers neither.
+
+The business-impact rule in the technical lead register holds here and points
+somewhere different. The consequence of people work is capability the business
+kept: the engineer brought up to standard stayed on the team rather than being
+replaced, two developers reached the next grade each within about a year of
+joining, and the constructs library and the upskilling put practices in the
+hands of 30 developers rather than six. State the outcome that outlasted the
+intervention, because that is what this screen is testing - not that the work
+was done, but that it held.
 
 Technical depth compresses but does not disappear: as in the project
 management register, it is evidence of credibility with engineers rather
@@ -238,6 +298,13 @@ otherwise get: suppliers, contractors, prospective clients, tenders, running
 events against a fixed date. So does judgement about what not to build. Say what
 was traded away and why - a one-person team leaning on CI and coverage in place
 of a second reviewer is the point, not an apology.
+
+The business-impact rule in the technical lead register applies most directly
+of all here, because in this register the business and the engineering are the
+same job. A dashboard is not a dashboard, it is how the company's marketing
+goes out and who can send it; four marketplace integrations are not four APIs,
+they are one order and inventory flow instead of four admin consoles worked by
+hand. Reach for what the company could do afterwards that it could not before.
 
 ### Project management
 
@@ -288,10 +355,19 @@ not mention how the CV was produced.
 - **`cv.md` has a structure the stylesheet keys off, and
   `scripts/validate_cv.py` enforces it.** A role heading is
   `### Company, Location - *Job Title*` followed by a date paragraph; the
-  competency columns are a flat list inside a `:::grid` fence; there is exactly
+  competency lines are a flat list inside a `:::grid` fence; there is exactly
   one `:::summary`. `make` runs the validator first and refuses to render if it
   fails, because every one of those mistakes still produces a plausible-looking
   PDF - just the wrong one.
+- **A grid item is a labelled line.** `**Label:** Item, Item, ...` - a bold
+  group label, then its items comma-separated, running the full width of the
+  page. The shape exists for the parse as much as the page: a columned list
+  extracts spatially, with one column's item landing beside another's so the
+  two run together into one string, while a full-width line comes back exactly
+  as written when an applicant tracking system reads the PDF's text. The
+  validator warns when a line has no label. The item names come from
+  `competencies.md`, as written there; the group labels are presentation and
+  may be regrouped per CV to answer the spec.
 - **The fonts are vendored, not fetched.** `assets/fonts/` holds PT Mono under
   the OFL. PT Mono ships no italic, so `scripts/make_oblique.py` shears the
   regular into a metric-compatible oblique - run it only when the upstream font

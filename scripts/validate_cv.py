@@ -36,6 +36,18 @@ UK_PHONE = re.compile(r"(\+44\s?\d|\b07\d{3}\s?\d{6}\b|\b0\d{3}\s?\d{3}\s?\d{4}\
 
 EXPERIENCE_HEADING = re.compile(r"^professional experience$", re.I)
 
+# Bullets run single-tier - see CLAUDE.md, "Every bullet stands alone". An
+# applicant tracking system strips indentation from the extracted text, so a
+# sub-bullet arrives as a top-level claim with its parent gone.
+NESTED_BULLET = re.compile(r"^\s+[-*+]\s")
+
+# A grid item is a labelled line: a bold group label, then its items
+# comma-separated - "**Building:** Serverless Architecture, CI/CD". The lines
+# run at the full measure rather than in columns, so length is free to wrap;
+# the label is what keeps the line legible on the page and when the PDF's text
+# is parsed back out by an applicant tracking system.
+GRID_LABEL = re.compile(r"^\*\*[^*]+:\*\*\s+\S")
+
 
 @dataclass
 class Report:
@@ -159,9 +171,18 @@ def check(path: str) -> Report:
                 rep.error(
                     n,
                     f"heading level {level} ('{text[:40]}') is deeper than the "
-                    "stylesheet goes - use nested bullets instead of '####'",
+                    "stylesheet goes - use bullets instead of '####'",
                 )
             continue
+
+        # Nested bullets: the grid fences error on them above; everywhere else
+        # they are a style regression rather than a broken render, so warn.
+        if NESTED_BULLET.match(line) and not div_stack:
+            rep.warn(
+                n,
+                "nested bullet - bullets are single-tier, because an ATS strips "
+                "the indent\n      make it a top-level bullet that names its own subject",
+            )
 
         # Contact details must not be committed.
         if UK_POSTCODE.search(line):
@@ -216,15 +237,24 @@ def check(path: str) -> Report:
         body = lines[open_line:close_line - 1]
         items = [b for b in body if b.strip().startswith(("-", "*", "+"))]
         if not items:
-            rep.error(open_line, "':::grid' contains no bullet list - it lays out a three-column list of items")
+            rep.error(open_line, "':::grid' contains no bullet list - it holds the labelled competency lines")
         for offset, b in enumerate(body):
             if b.startswith(("  -", "\t-", "  *", "\t*")):
                 rep.error(
                     open_line + offset + 1,
-                    "nested bullet inside ':::grid' - the competency columns take a flat list only",
+                    "nested bullet inside ':::grid' - the competency grid takes a flat list only",
                 )
-        if len(items) and len(items) < 3:
-            rep.warn(open_line, f"only {len(items)} items in a three-column grid - it will look sparse")
+
+        for offset, b in enumerate(body):
+            if not b.strip().startswith(("-", "*", "+")):
+                continue
+            text = re.sub(r"^\s*[-*+]\s*", "", b.strip())
+            if not GRID_LABEL.match(text):
+                rep.warn(
+                    open_line + offset + 1,
+                    f"grid item has no bold label: '{text[:44]}'\n"
+                    "      expected the shape '**Label:** Item, Item, ...'",
+                )
 
     return rep
 
