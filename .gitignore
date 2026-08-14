@@ -34,3 +34,10 @@ applications/*
 # Playwright, for the find-jobs browser fetcher - installed locally from the
 # package.json beside it, never committed.
 node_modules/
+
+# The find-jobs sweep's two standing lists: who is being asked to place me, and
+# who I want to work for. Neither is a public fact, and both are edited between
+# runs without touching the skill. The .example.md files beside them carry
+# placeholders only and are committed, because a fresh clone needs the shape.
+.claude/skills/find-jobs/RECRUITERS.md
+.claude/skills/find-jobs/COMPANIES.md

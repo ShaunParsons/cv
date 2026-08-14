@@ -29,21 +29,23 @@ const VERDICTS_SCHEMA = {
       type: 'array',
       items: {
         type: 'object',
-        required: ['url', 'live', 'confirmed', 'postedDate', 'locationOk', 'stackOk',
-                   'seniorityOk', 'type', 'salaryMinGbp', 'salaryMaxGbp',
-                   'working', 'notes'],
+        required: ['url', 'live', 'confirmed', 'postedDate', 'locationOk', 'softwareRole',
+                   'stackOk', 'seniorityOk', 'type', 'salaryMinGbp', 'salaryMaxGbp',
+                   'working', 'applyUrl', 'notes'],
         properties: {
           url: { type: 'string', description: 'the lead url, unchanged, so verdicts join back to leads' },
           live: { type: 'boolean' },
           confirmed: { type: 'boolean', description: 'true when the live-or-dead call rests on a directly loaded page or an authoritative API response, false when inferred' },
           postedDate: { type: ['string', 'null'], description: 'YYYY-MM-DD, or null if no date is shown' },
           locationOk: { type: 'boolean' },
+          softwareRole: { type: 'boolean', description: 'software engineering, rather than engineering in one of the several other senses that share the word - mechanical, process, civil, or a sales or product role using the title' },
           stackOk: { type: 'boolean' },
           seniorityOk: { type: 'boolean' },
           type: { enum: ['permanent', 'contract', 'unknown'] },
           salaryMinGbp: { type: ['number', 'null'] },
           salaryMaxGbp: { type: ['number', 'null'] },
           working: { enum: ['on-site', 'hybrid', 'remote', 'unknown'] },
+          applyUrl: { type: ['string', 'null'], description: "the same vacancy on the employer's own careers page or the ATS behind it, where the application should go; the lead's own url when it is already there; null when no match was found" },
           notes: { type: 'string' },
         },
       },
@@ -68,8 +70,23 @@ It prints JSON carrying the rendered page's text, final URL and HTTP status -
 treat that as a directly loaded page when calling confirmed. A rendered
 bot-check or consent interstitial with no job content settles nothing, and
 the lead stays unconfirmed. Extract rather than decide: report any salary
-band in GBP numbers and leave the floor comparison to the caller. Return one
-verdict per lead, carrying the same url unchanged.
+band in GBP numbers and leave the floor comparison to the caller.
+
+Then resolve the apply route, following the "Resolving the apply route"
+section of that same document. Where the lead sits on a board or an
+aggregator - LinkedIn above all - find the same vacancy on the employer's own
+careers page or on the ATS behind it, and report that as applyUrl, matching
+on title and location before accepting one. A lead already on an employer's
+page or ATS takes its own url. Report null where no match is found; that is
+not a failure and does not drop the lead.
+
+A lead carrying \`titleUnsettled: true\` cleared the band on its title but named
+no software surface either way - "Engineering Manager" reads identically at a
+software house and at a turbine manufacturer. The page settles it: report
+softwareRole against what the responsibilities actually describe, not against
+the title. Answer softwareRole for every lead, not only the flagged ones.
+
+Return one verdict per lead, carrying the same url unchanged.
 
 Leads:
 ${JSON.stringify(chunk, null, 2)}`
@@ -88,6 +105,7 @@ const dropReason = (v) => {
   if (!v) return 'unverified'
   if (!v.live) return v.confirmed ? 'dead' : 'unconfirmed'
   if (v.postedDate && v.postedDate < sinceDate) return 'stale'
+  if (v.softwareRole === false) return 'discipline'
   if (!v.locationOk) return 'location'
   if (!v.stackOk) return 'stack'
   if (!v.seniorityOk) return 'seniority'
