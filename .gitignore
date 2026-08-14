@@ -15,9 +15,22 @@ dist/
 # belongs back in roles/*.md.
 cv.md
 
-# Job specs pulled down by /generate-cv - transient, and not ours to publish.
-.job-spec.txt
-.job-spec-download.pdf
+# Job specs pulled down by /generate-cv, and any kept by hand alongside them -
+# transient, not ours to publish, and they carry the salary figures this repo
+# keeps out. The glob covers the suffixed ones (.job-spec-acme.txt) too: an
+# exact filename here left every spec but one committable.
+.job-spec*
 
 # Real contact details. .env.example carries placeholders; this never gets committed.
 .env
+
+# Application records. One file per application, carrying the advertised salary,
+# the requirements an assessment found missing, and whatever a rejection said -
+# none of which belongs in a public repo. TEMPLATE.md is the exception and is
+# committed, because it is placeholders only and a fresh clone needs the shape.
+applications/*
+!applications/TEMPLATE.md
+
+# Playwright, for the find-jobs browser fetcher - installed locally from the
+# package.json beside it, never committed.
+node_modules/

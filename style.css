@@ -3,11 +3,9 @@
    WeasyPrint renders the PDF from the very same HTML the browser gets, so the
    two outputs cannot drift. Any change here must be checked against BOTH.
 
-   The type scale and geometry below were measured off the 2026-07-25 Google
-   Docs CV so the generated document reads as the same document. The palette
-   has since departed from it deliberately: the name runs in ink rather than
-   grey, and the body grey is darker than the source's, for legibility in
-   print and scans.
+   The palette is set for paper rather than for the screen: the name runs in
+   ink rather than grey, and the body grey is dark enough to survive being
+   printed and scanned.
    --------------------------------------------------------------------------- */
 
 @font-face {
@@ -37,16 +35,20 @@
   --name:     #000000;  /* no lighter than the headings - the name is the one
                            string the page exists to make memorable */
   --body:     #4a4a4a;  /* body copy, bullets, dates - dark enough to survive
-                           printing and scanning at 9pt */
+                           printing and scanning at 10pt */
   --accent:   #dc952c;  /* the two masthead rules */
 
-  /* Type scale. */
+  /* Type scale. Body is 10pt - PT Mono sets wide, so every point here is paid
+     for in bullets, and 10pt is the settlement between legibility and how much
+     evidence fits in two pages. The heading sizes scale with the body rather
+     than being set independently; leaving them behind would flatten the
+     hierarchy, and running them ahead of it wraps the longest role heading. */
   --size-name:    24pt;
-  --size-section: 12pt;
-  --size-role:    11pt;
-  --size-body:     9pt;
+  --size-section: 13pt;
+  --size-role:  11.5pt;
+  --size-body:    10pt;
 
-  --leading-body: 1.41;  /* 12.7pt on 9pt, as measured */
+  --leading-body: 1.41;  /* 14.1pt on 10pt */
 
   /* Bullet geometry. One indent step per nesting level. */
   --indent-step:  18pt;
@@ -173,17 +175,18 @@ h3 em {
   font-style: italic;
 }
 
-/* The date line: the paragraph immediately after a role heading. Set right
-   and pulled up onto the heading's own line, so heading and dates share a
-   line with the dates in a column down the right margin. The negative margin
-   is the heading's 13.2pt line box less a baseline nudge for the smaller
-   date type - re-check the PDF if the h3 metrics change. */
+/* The date line: the paragraph immediately after a role heading. It sits on its
+   own line beneath the heading, set left, so the two start at the same point
+   and read as one block. Giving it its own line costs a line per role and buys
+   two things: the heading gets the full measure to wrap in, and the dates
+   extract directly under the heading they belong to rather than being
+   collected at the foot of the section. */
 h3 + p {
   color: var(--body);
   font-size: var(--size-body);
-  margin: -12.6pt 0 0;
+  margin: 2pt 0 0;
   line-height: 1.2;
-  text-align: right;
+  text-align: left;
   break-before: avoid;
   break-after: avoid;
 }

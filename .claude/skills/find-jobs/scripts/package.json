@@ -1,0 +1,9 @@
+{
+  "name": "find-jobs-scripts",
+  "private": true,
+  "type": "module",
+  "description": "Dependencies for browser_fetch.mjs, the find-jobs browser-fetch fallback. The .mjs workflow scripts alongside it are run by the Workflow tool, not by Node, and need nothing from here.",
+  "dependencies": {
+    "playwright": "^1.62.1"
+  }
+}

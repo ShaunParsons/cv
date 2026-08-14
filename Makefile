@@ -158,7 +158,7 @@ pages: pdf
 # dated name.
 dated: pdf
 	@company=$$(sed -n 's/^tailored-for:[[:space:]]*//p' $(SRC) | head -1 \
-	  | tr -d '"' | sed -n 's/.* at //p' | tr ' ' '-' | tr -cd 'A-Za-z0-9-'); \
+	  | tr -d '"' | sed -n 's/.* at //p' | tr ' ' '-' | tr -cd 'A-Za-z0-9-' | tr -s '-'); \
 	out="$(DIST)/CV-Shaun-Parsons-$${company:+$$company-}$$(date +%Y-%m-%d).pdf"; \
 	cp $(DIST)/cv.pdf "$$out"; \
 	echo "built $$out"
