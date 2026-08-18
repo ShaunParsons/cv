@@ -96,6 +96,11 @@ const POSTING_PATTERNS = {
   // LinkedIn writes the id into the slug and again into the query, and the
   // two forms of the URL are otherwise nothing alike.
   linkedin: /linkedin\.com\/jobs\/(?:view\/(?:[^/?#]*-)?(\d{6,})|search-results\/?\?.*?currentJobId=(\d+))/i,
+  // Indeed carries the posting id in the query rather than the path, so the
+  // fallback key below - hostname plus pathname - folds every /viewjob URL in
+  // the folder onto one another. Keying on the id alone also folds the
+  // regional hostnames together, which is the same posting either way.
+  indeed: /indeed\.com\/.*?[?&]v?jk=([0-9a-z]+)/i,
 }
 
 const postingKey = (u) => {
