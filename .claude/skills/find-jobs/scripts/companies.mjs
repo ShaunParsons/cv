@@ -96,7 +96,7 @@ const ADAPTERS = [
   },
 ]
 
-const adapterFor = (url) => ADAPTERS.find((a) => a.match.test(url)) ?? null
+export const adapterFor = (url) => ADAPTERS.find((a) => a.match.test(url)) ?? null
 
 // --- the list --------------------------------------------------------------
 
@@ -124,7 +124,7 @@ export function parseCompanies(md) {
 
 // --- fetching --------------------------------------------------------------
 
-async function fetchBoard(entry) {
+export async function fetchBoard(entry) {
   const adapter = adapterFor(entry.url)
   if (!adapter) return { ...entry, ats: null, postings: null, error: 'no adapter - not a known ATS API' }
   try {
@@ -142,7 +142,7 @@ async function fetchBoard(entry) {
   }
 }
 
-async function pool(items, worker, limit = CONCURRENCY) {
+export async function pool(items, worker, limit = CONCURRENCY) {
   const out = new Array(items.length)
   let next = 0
   await Promise.all(Array.from({ length: Math.min(limit, items.length) }, async () => {

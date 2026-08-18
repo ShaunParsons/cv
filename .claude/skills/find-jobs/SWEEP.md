@@ -46,15 +46,26 @@ Smaller boards with better signal-to-noise for product and startup roles.
 
 ## Modality 3 - ATS-hosted careers pages
 
-The core of the hidden market. Companies that hire without posting to boards still host their vacancies on an applicant tracking system, and those pages are indexed. Search each ATS domain directly:
+The core of the hidden market. Companies that hire without posting to boards still host their vacancies on an applicant tracking system, and those pages are indexed. What the index is not is current: it answers with its last crawl, and a filled requisition is taken down without a redirect, so a listing survives in the index for months after it stops being a vacancy. Run on index results alone, this modality returned dead links two times in five.
 
-- `site:boards.greenhouse.io "<title>" uk OR remote`
+So it runs in two steps, and the search is spent on the half a search index is good at.
+
+**Step one - find the boards.** Search each ATS domain directly, and collect the links:
+
+- `site:boards.greenhouse.io "<title>" uk OR remote`, and `site:job-boards.greenhouse.io` for the newer host
 - `site:jobs.lever.co "<title>" uk OR remote`
 - `site:jobs.ashbyhq.com "<title>" uk OR remote`
 - `site:apply.workable.com "<title>" uk OR remote`
 - `site:jobs.smartrecruiters.com "<title>" uk OR remote`
+- `site:recruitee.com "<title>" uk OR remote`
 
-Vary the title synonyms here more than anywhere else - ATS pages carry the company's own title, not a board's normalised one, so "Engineering Lead", "Lead Engineer", "Head of Software" and the brief's titles all earn a pass.
+Collect every ATS link the results carry, including the ones whose titles are wrong, whose dates are old, or which look dead. These results are not being read for vacancies - they are being read for which companies keep a board, and the board token in `boards.greenhouse.io/monzo/jobs/4512345` outlives the requisition it points at. A two-year-old link to a filled role names a live board just as well as a fresh one does.
+
+Vary the title synonyms here more than anywhere else - ATS pages carry the company's own title, not a board's normalised one, so "Engineering Lead", "Lead Engineer", "Head of Software" and the brief's titles all earn a pass. A synonym that surfaces one company's board hands you every other opening on that board for free.
+
+**Step two - ask the boards.** Feed the collected links to `scripts/ats_boards.mjs`, which reduces them to the boards behind them, asks each board's public API what is open today, and gates the answers through the same title, location and recency filters as the rest of the sweep. Its output is live by construction and carries the company's own posting dates. The command, with the sweep's standing filters already on it, is in the searcher's brief.
+
+What the script hands back still needs reading: hold each match against the brief, and fetch the posting where the title alone does not settle it. Two of its fields are work rather than noise - `unresolved` is the links on no known ATS, usually a company's own careers page, which are yours to fetch; `failed` is the boards that errored, which belong in your notes. Its `company` is the board's token rather than the employer's own name for itself, so name the employer from the posting.
 
 ## Modality 4 - hiring signals
 
@@ -188,7 +199,7 @@ The split is the one this repo uses everywhere. Fetching a couple of hundred JSO
 It prints JSON. Four fields are yours to act on:
 
 - **`matches`** - the postings that cleared the title gate, each with a `match` of `strong` or `ambiguous` and the ambiguous ones sorted last. Hold each against the brief, and fetch the posting where the title alone does not settle it, working the strong ones first. This is the reading the script cannot do: a title clears a gate, a description answers a brief.
-- **`needAgent`** - companies whose row carries a careers page rather than an API. The script cannot read those; you can. Fetch each one and read its board as you would in Modality 3.
+- **`needAgent`** - companies whose row carries a careers page rather than an API. The script cannot read those; you can. Fetch each one and read what it lists. Where the careers page turns out to hand off to an ATS, `scripts/ats_boards.mjs` reads that board from its link the same way Modality 3 does, and is cheaper than paging through the site.
 - **`failed`** - boards that errored. Report them in your notes rather than swallowing them: a token that has gone stale is a row to fix, and it is invisible unless it is said.
 - **`note`** - appears only when the list is missing entirely, and means this modality returns nothing. Say so in your return. There is no generic fallback here, because the list *is* the modality; never substitute companies of your own.
 

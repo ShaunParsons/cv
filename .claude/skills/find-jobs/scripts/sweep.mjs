@@ -52,9 +52,12 @@ const browserFetch = sweepDoc.replace(/\/SWEEP\.md$/, '/scripts/browser_fetch.mj
 // inventing entries to fill it.
 const recruitersDoc = sweepDoc.replace(/\/SWEEP\.md$/, '/RECRUITERS.md')
 const companiesDoc = sweepDoc.replace(/\/SWEEP\.md$/, '/COMPANIES.md')
-// The title gate, and Modality 7's board fetcher which is built on it.
+// The title gate, and the two board fetchers built on it - Modality 7's, which
+// reads the standing company list, and Modality 3's, which reads whatever ATS
+// boards a search turned up.
 const titleFilter = sweepDoc.replace(/\/SWEEP\.md$/, '/scripts/title_filter.mjs')
 const companiesScript = sweepDoc.replace(/\/SWEEP\.md$/, '/scripts/companies.mjs')
+const atsScript = sweepDoc.replace(/\/SWEEP\.md$/, '/scripts/ats_boards.mjs')
 // The spec saver, and where it writes. The slug rule lives in that script
 // rather than here, so the directory a spec lands in and the directory step 5
 // writes the record into are the same string by construction - and across
@@ -134,7 +137,7 @@ const VERDICTS_SCHEMA = {
 const MODALITIES = [
   { n: 1, key: 'boards', name: 'major boards' },
   { n: 2, key: 'startup', name: 'startup boards and threads' },
-  { n: 3, key: 'ats', name: 'ATS-hosted careers pages' },
+  { n: 3, key: 'ats', name: 'ATS-hosted careers pages', ats: true },
   { n: 4, key: 'signals', name: 'hiring signals' },
   { n: 5, key: 'recruiters', name: 'specialist recruiter boards', doc: recruitersDoc },
   { n: 6, key: 'remote', name: 'remote-first job boards' },
@@ -157,12 +160,63 @@ const companiesCommand = (offset, limit) => `node ${companiesScript} --companies
     --locations "${csv(brief.locationTerms ?? [])}" \\
     --not-locations "${csv(notLocations)}"`
 
+// Modality 3's two steps. A search index is the only way to find out which
+// companies keep a board at all, and it is a poor way to find out what is on
+// one: it answers with its last crawl, and a filled requisition is taken down
+// without a redirect, so the modality's leads used to arrive dead two times in
+// five. The board token in the URL outlives the requisition, though - so the
+// search is spent on discovery and the board's own API is asked for the truth.
+const atsCommand = `printf '%s\\n' "<url>" "<url>" ... | node ${atsScript} \\
+    --exclude "${csv(excludeTerms)}" --since ${sinceDate} \\
+    --locations "${csv(brief.locationTerms ?? [])}" \\
+    --not-locations "${csv(notLocations)}"`
+
+const atsBlock = () => `
+Your modality searches applicant tracking systems, and it runs in two steps
+because a search index is good at exactly one of them.
+
+**Step one: discovery.** Run the \`site:\` searches your modality section lists,
+and collect the ATS links out of the results - every one of them, including the
+ones whose titles are wrong, whose dates are old, or which you expect to be
+dead. You are not reading these results for vacancies. You are reading them for
+which companies keep a board, and a two-year-old link to a filled role names a
+board just as well as a fresh one does. Widen the title synonyms hard here: a
+search for one title that surfaces a company's board hands you every other
+opening on it for free.
+
+**Step two: the boards themselves.** Feed every link you collected to the
+fetcher, with Bash:
+
+  ${atsCommand}
+
+It reduces the links to the boards behind them - twenty links to one company
+cost one request - asks each board's public API what is open today, and gates
+what comes back through the same title, location and recency filters the rest
+of the sweep uses. What it prints is live by construction and carries the
+company's own posting dates, which is what the index could not tell you.
+
+Then do the reading the script cannot: hold each match against the brief, and
+fetch the posting where the title alone does not settle it - \`ambiguous\` is
+exactly the case a fetch is for, and \`strong\` ones are worth working first.
+
+Two fields are yours to act on rather than ignore:
+- \`unresolved\` lists links on no ATS this script knows, or on none at all -
+  a company's own careers page, most often. Fetch those yourself.
+- \`failed\` lists boards that errored. Report them in your notes.
+
+One caution on names: \`company\` in the output is the board's token, which is
+usually the company's name and sometimes a mangling of it. Name the employer
+from the posting when you write the lead up, not from the token.
+
+Leads still come back through the normal schema, with the posting's own URL.
+`
+
 const searchPrompt = (m) => `You are one searcher in a fanned-out job sweep. Several searchers run in
 parallel, each on a different modality or a different slice of one; yours is
 Modality ${m.n} (${m.name})${m.chunkLabel ? `, slice ${m.chunkLabel}` : ''}.
 
 Read ${sweepDoc} and follow its preamble plus ONLY the "Modality ${m.n}" section.
-${m.doc && !m.script ? `\nYour modality works from a standing list, held outside the repo at\n  ${m.doc}\nRead it with the Read tool before you search. Where the file is missing or\nholds no entries, say so plainly in your notes and follow what your modality\nsection says to do about it - never substitute entries of your own.\n` : ''}${m.script ? `\nYour modality works from a standing list of companies, held outside the repo\nat\n  ${m.doc}\nThe list is long, and it has been cut into slices so that several searchers\ncan work it at once. **Yours is slice ${m.chunkLabel}: the ${m.limit} companies at\noffset ${m.offset}.** Do NOT read the list yourself and do NOT widen your slice -\nanother searcher holds every company outside it, and reading them again is\nduplicated work that the dedupe will only throw away. Run this first, with\nBash:\n\n  ${companiesCommand(m.offset, m.limit)}\n\nIt reads your slice's boards, discards the postings whose titles are out of\nband, name something ruled out, or sit outside the location scope, and prints\nwhat is left as JSON. That is your candidate set, and it is your slice's whole\nanswer rather than a sample of it. Its \`totalCompanies\` names the length of the\nfull list, so do not read a small \`companies\` count as a short list - it is\nyour share of a long one.\n\nThen do the reading the script cannot. Hold each match against the brief, and\nfetch the posting where the title alone does not settle it - every match\ncarries a \`match\` of \`strong\` or \`ambiguous\`, and the ambiguous ones are\nexactly the ones a fetch is for. Work the strong ones first. Your slice is\nsmall enough to work through to the end; do so rather than stopping early.\n\nThree fields in its output are yours to act on, not to ignore:\n- \`needAgent\` lists companies in your slice whose row carries a careers page\n  rather than an API. The script cannot read those; you can. Fetch each one.\n- \`failed\` lists boards that errored. Report them in your notes.\n- \`note\` appears when the list is missing entirely, and means this modality\n  returns nothing. Say so - never substitute companies of your own.\n` : ''}
+${m.doc && !m.script ? `\nYour modality works from a standing list, held outside the repo at\n  ${m.doc}\nRead it with the Read tool before you search. Where the file is missing or\nholds no entries, say so plainly in your notes and follow what your modality\nsection says to do about it - never substitute entries of your own.\n` : ''}${m.ats ? atsBlock() : ''}${m.script ? `\nYour modality works from a standing list of companies, held outside the repo\nat\n  ${m.doc}\nThe list is long, and it has been cut into slices so that several searchers\ncan work it at once. **Yours is slice ${m.chunkLabel}: the ${m.limit} companies at\noffset ${m.offset}.** Do NOT read the list yourself and do NOT widen your slice -\nanother searcher holds every company outside it, and reading them again is\nduplicated work that the dedupe will only throw away. Run this first, with\nBash:\n\n  ${companiesCommand(m.offset, m.limit)}\n\nIt reads your slice's boards, discards the postings whose titles are out of\nband, name something ruled out, or sit outside the location scope, and prints\nwhat is left as JSON. That is your candidate set, and it is your slice's whole\nanswer rather than a sample of it. Its \`totalCompanies\` names the length of the\nfull list, so do not read a small \`companies\` count as a short list - it is\nyour share of a long one.\n\nThen do the reading the script cannot. Hold each match against the brief, and\nfetch the posting where the title alone does not settle it - every match\ncarries a \`match\` of \`strong\` or \`ambiguous\`, and the ambiguous ones are\nexactly the ones a fetch is for. Work the strong ones first. Your slice is\nsmall enough to work through to the end; do so rather than stopping early.\n\nThree fields in its output are yours to act on, not to ignore:\n- \`needAgent\` lists companies in your slice whose row carries a careers page\n  rather than an API. The script cannot read those; you can. Fetch each one.\n- \`failed\` lists boards that errored. Report them in your notes.\n- \`note\` appears when the list is missing entirely, and means this modality\n  returns nothing. Say so - never substitute companies of your own.\n` : ''}
 
 The brief:
 - Titles: ${brief.titles.join('; ')} - and their common synonyms
