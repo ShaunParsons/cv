@@ -31,7 +31,10 @@
 // So: drop on `band` and `excluded`, which are the user's own criteria read
 // off the title; never drop on `discipline` alone.
 
-const BAND = /\b(senior|snr|sr\.?|lead|leader|leading|principal|staff|head\s+of|director\s+of|manager|management)\b/i
+// "Architect" is a band in its own right - nobody advertises a junior one, and
+// the title carries no seniority word to read. Without it here, "Solutions
+// Architect" and "Cloud Architect" are dropped as unbanded before a fetch.
+const BAND = /\b(senior|snr|sr\.?|lead|leader|leading|principal|staff|head\s+of|director\s+of|manager|management|architect\w*)\b/i
 const TOO_JUNIOR = /\b(graduate|junior|jnr|intern(ship)?|apprentice\w*|trainee|placement|mid[-\s]level|entry[-\s]level|associate)\b/i
 const TOO_SENIOR = /\b(cto|chief|c\.t\.o|vp|vice\s+president|svp|evp|managing\s+director|founder|partner)\b/i
 
@@ -40,14 +43,56 @@ const TOO_SENIOR = /\b(cto|chief|c\.t\.o|vp|vice\s+president|svp|evp|managing\s+
 // Engineering in one of its other senses, plus the non-engineering roles that
 // ride in on a single word - "Director of Product, ClickHouse Cloud" clears
 // the band and names a software surface without being a software job.
-const NON_SOFTWARE = /\b(workshop|mechanical|electrical|civil|structural|process|chemical|manufactur\w*|production|maintenance|plant|facilities|hvac|automotive|aerospace|marine|rail|highways|nuclear|petroleum|drilling|mining|construction|hse|health\s*&\s*safety|field\s+service|building\s+services|project\s+engineering|bid|proposal|pre[-\s]?sales|technical\s+services|(director|head|vp)\s+of\s+product|product\s+(manager|owner|designer|marketing|lead)|curriculum|instructor|trainer|technical\s+writer|designer|recruit\w*|account\s+(executive|manager)|sales|marketing|customer\s+success|partnerships?|finance|legal|people\s+(partner|operations))\b/i
+const NON_SOFTWARE = /\b(workshop|mechanical|electrical|civil|structural|process|chemical|manufactur\w*|production|maintenance|plant|facilities|hvac|automotive|aerospace|marine|rail|highways|nuclear|petroleum|drilling|mining|construction|hse|health\s*&\s*safety|field\s+service|building\s+services|project\s+engineering|bid|proposal|pre[-\s]?sales|technical\s+services|(director|head|vp)\s+of\s+product|product\s+(manager|owner|designer|marketing|lead)|curriculum|instructor|trainer|technical\s+writer|designer|recruit\w*|account\s+(executive|manager)|sales|marketing|customer\s+success|partnerships?|finance|legal|people\s+(partner|operations)|procurement|category\s+manager|talent|(business|learning\s+and|leadership|commercial)\s+development)\b/i
 
 // A software surface named outright - settles the discipline on its own.
-const SOFTWARE = /\b(software|backend|back[\s-]?end|full[\s-]?stack|platform|cloud|devops|sre|site\s+reliability|infrastructure|api|microservice\w*|distributed\s+systems|node(\.?js)?|typescript|javascript|serverless|kubernetes|application\s+development|web\s+services|developer|development)\b/i
+// "Solutions Architect" and "Enterprise Architect" name no technology, but the
+// compound is a software one wherever the non-software gate above has not
+// already fired on a construction or building-services word.
+const SOFTWARE = /\b(software|backend|back[\s-]?end|full[\s-]?stack|platform|cloud|devops|sre|site\s+reliability|infrastructure|api|microservice\w*|distributed\s+systems|node(\.?js)?|typescript|javascript|serverless|kubernetes|application\s+development|web\s+services|developer|development|(solutions?|enterprise|technical|technology|data|integration|systems?)\s+architect)\b/i
 
 // A band title with no discipline in it. Kept, flagged, and settled by a
 // fetch rather than by a guess.
-const AMBIGUOUS = /^(senior\s+|staff\s+|principal\s+|lead\s+|head\s+of\s+|director\s+of\s+)*(engineering\s+manager|engineering\s+lead|lead\s+engineer|technical\s+lead|tech(nical)?\s+lead|team\s+lead|engineering|engineer|technology\s+lead|member\s+of\s+technical\s+staff)\s*$/i
+//
+// The core is the leadership vocabulary engineering shares with every other
+// discipline - "Engineering Manager", "Tech Lead", "Engineering Team Lead" -
+// and it may carry a qualifier in front of it. That qualifier is what an
+// anchor allowing only a fixed list of seniority words gets wrong: "AI
+// Technical Lead" is "Technical Lead" with a word in front and "Engineering
+// Team Lead" is "Engineering Lead" with one in the middle, and both were being
+// dropped as "no software surface named" - the one verdict a bare band title
+// must never get. The qualifier is left open rather than enumerated, because
+// by the time a title reaches this line the two gates that matter have already
+// run: BAND has required a seniority word, so nothing unqualified gets here at
+// all, and NON_SOFTWARE has removed the other senses of the word, so a
+// "Mechanical Engineering Lead" or a "Sales Engineering Manager" is long gone.
+// What is left over is a title that costs a fetch to settle, which is what
+// `ambiguous` means.
+// The cores split in two, because they can carry different prefixes. A core
+// naming engineering outright - "Technical Lead", "Engineering Team Lead" -
+// stays a band title whatever qualifies it, so the qualifier is open. A core
+// that is only a shape - a bare "Team Lead", "Engineer", "Engineering" - takes
+// its discipline from whatever sits in front of it, so only a seniority word
+// may: "Pharmacy Team Lead" and "Game Operations Team Lead" are somebody
+// else's job, and letting an open qualifier reach a bare core spends a fetch
+// settling a title that reads perfectly clearly.
+const AMBIGUOUS_NAMED = [
+  '(?:engineering|engineer|technical|technology|tech)\\s+(?:team\\s+)?(?:lead|leader|manager|management)',
+  'lead\\s+engineer',
+  'member\\s+of\\s+technical\\s+staff',
+].join('|')
+const AMBIGUOUS_BARE = ['team\\s+lead(?:er)?', 'engineering', 'engineer'].join('|')
+const SENIORITY_PREFIX = '(?:senior|snr|sr\\.?|staff|principal|lead|head\\s+of|director\\s+of|group|global)\\s+'
+const AMBIGUOUS = new RegExp(
+  `^(?:(?:[\\w&/+.'-]+\\s+){0,3}(?:${AMBIGUOUS_NAMED})|(?:${SENIORITY_PREFIX})*(?:${AMBIGUOUS_BARE}))\\s*$`, 'i')
+
+// Most band titles carry the team or product after a dash, comma, paren or
+// pipe - "Engineering Manager - Music", "Principal Engineer, Cluster
+// Orchestration", "Staff Engineer (Client Ops)". The suffix names the domain,
+// never the discipline, so it is stripped before AMBIGUOUS is tried a second
+// time. Without this the anchor drops the title as "no software surface
+// named", which is the one verdict a bare band title must never get.
+const TEAM_SUFFIX = /\s*[-,(|].*$/
 
 /**
  * Build a matcher for the caller's standing exclusions.
@@ -100,6 +145,7 @@ export function gradeTitle(title, { exclude = [] } = {}) {
   if (NON_SOFTWARE.test(t)) return { verdict: null, reason: 'discipline', matched: t.match(NON_SOFTWARE)[0] }
   if (SOFTWARE.test(t)) return { verdict: 'strong', reason: null, matched: t.match(SOFTWARE)[0] }
   if (AMBIGUOUS.test(t)) return { verdict: 'ambiguous', reason: null, matched: null }
+  if (AMBIGUOUS.test(t.replace(TEAM_SUFFIX, '').trim())) return { verdict: 'ambiguous', reason: null, matched: null }
   return { verdict: null, reason: 'discipline', matched: 'no software surface named' }
 }
 
