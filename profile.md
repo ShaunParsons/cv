@@ -23,6 +23,7 @@ The summary is the highest-leverage paragraph on the CV and the only part with n
 
 - **Located in the Midlands, and open to London on a hybrid basis or to fully remote work.** `#direction`
   - In scope on site: Leicester, Nottingham, Birmingham and Derby
+  - Stoke-on-Trent: in scope on a light hybrid only - one or two days a week, not three
   - London: workable hybrid, commuting in for a set number of days a week - three is fine
   - Fully remote: in scope. Talis Education was office-based in Birmingham initially and remote from the pandemic onwards, so four years of it is evidenced rather than aspirational
   - Why it matters: an on-site requirement is a hard filter, and a failed hard filter ends an application whatever else is true. Knowing the answer up front decides which specs are worth assessing at all
