@@ -31,6 +31,11 @@ export const meta = {
 //                   "Remote" is a working pattern rather than a place and every
 //                   board writes it beside one, so an out-of-scope country has
 //                   to be read before "remote" can be believed.
+//   applicationsDir absolute path to applications/. Defaults to the one beside
+//                   this repo's skill directory. Every posting a verifier
+//                   reads is written under it as it is read - a listing is
+//                   taken down within weeks, and a verdict of six booleans is
+//                   not a copy of the spec it was derived from.
 
 // Tolerate args arriving JSON-encoded rather than as an object.
 const input = typeof args === 'string' ? JSON.parse(args) : (args ?? {})
@@ -50,6 +55,14 @@ const companiesDoc = sweepDoc.replace(/\/SWEEP\.md$/, '/COMPANIES.md')
 // The title gate, and Modality 7's board fetcher which is built on it.
 const titleFilter = sweepDoc.replace(/\/SWEEP\.md$/, '/scripts/title_filter.mjs')
 const companiesScript = sweepDoc.replace(/\/SWEEP\.md$/, '/scripts/companies.mjs')
+// The spec saver, and where it writes. The slug rule lives in that script
+// rather than here, so the directory a spec lands in and the directory step 5
+// writes the record into are the same string by construction - and across
+// runs too, since it matches the posting against the records already on disk
+// rather than re-deriving a name from however the company was worded today.
+const saveSpec = sweepDoc.replace(/\/SWEEP\.md$/, '/scripts/save_spec.mjs')
+const applicationsDir = input.applicationsDir
+  ?? sweepDoc.replace(/\/\.claude\/skills\/[^/]+\/SWEEP\.md$/, '/applications')
 
 const excludeTerms = input.excludeTitleTerms ?? []
 const notLocations = input.notLocations ?? []
@@ -93,7 +106,7 @@ const VERDICTS_SCHEMA = {
         type: 'object',
         required: ['url', 'live', 'confirmed', 'postedDate', 'locationOk', 'softwareRole',
                    'stackOk', 'seniorityOk', 'type', 'salaryMinGbp', 'salaryMaxGbp',
-                   'working', 'applyUrl', 'notes'],
+                   'working', 'applyUrl', 'slug', 'specPath', 'specSource', 'notes'],
         properties: {
           url: { type: 'string', description: 'the lead url, unchanged, so verdicts join back to leads' },
           live: { type: 'boolean' },
@@ -108,6 +121,9 @@ const VERDICTS_SCHEMA = {
           salaryMaxGbp: { type: ['number', 'null'] },
           working: { enum: ['on-site', 'hybrid', 'remote', 'unknown'] },
           applyUrl: { type: ['string', 'null'], description: "the same vacancy on the employer's own careers page or the ATS behind it, where the application should go; the lead's own url when it is already there; null when no match was found" },
+          slug: { type: ['string', 'null'], description: "the record directory name save_spec.mjs printed for this lead, so the record and its spec land in the same place; null where the save failed" },
+          specPath: { type: ['string', 'null'], description: 'path save_spec.mjs wrote the posting to, or null where nothing could be saved' },
+          specSource: { type: ['string', 'null'], description: "how it was read: greenhouse, lever, ashby, smartrecruiters, workable, fetch, browser, or existing" },
           notes: { type: 'string' },
         },
       },
@@ -197,6 +213,39 @@ treat that as a directly loaded page when calling confirmed. A rendered
 bot-check or consent interstitial with no job content settles nothing, and
 the lead stays unconfirmed. Extract rather than decide: report any salary
 band in GBP numbers and leave the floor comparison to the caller.
+
+**Save the posting as you read it.** Your verdict is a handful of booleans and
+the listing behind it is gone within weeks, so write the text down while the
+page is in front of you, with Bash:
+
+  node ${saveSpec} "<url>" \\
+      --applications ${applicationsDir} \\
+      --company "<company>" --role "<title>"
+
+Run it for every lead you fetched, whatever the verdict - a lead dropped on
+its salary or its stack needs its spec as much as one that survives, because
+the record for that drop is what stops the next sweep paying to find and read
+the same posting again. Pass the applyUrl where you resolved one and the
+lead's own url otherwise: the employer's copy is the authoritative one and the
+board's is the one that gets truncated.
+
+It fetches the page itself, through the ATS API where there is one, so it does
+not matter that you have already read it - what lands on disk is the posting
+rather than your account of it, which is the whole point. It prints
+{slug, path, source}: report those back as slug, specPath and specSource.
+Where it exits non-zero it still prints a slug; report that one and leave
+specPath null, saying what it printed in notes.
+
+Report the slug it prints and never one of your own. It resolves the posting's
+identity against the records already on disk, so a lead already recorded under
+a company you have worded differently comes back under the name that record
+already has - \`identity: "matched"\`, with \`reusedFrom\` naming what this run
+would otherwise have called it. That is the lead being recognised, not an
+error, and it is what stops one vacancy occupying two directories. Where it
+prints \`possibleDuplicates\`, put those slugs in notes: they are same-company
+leads with near-identical titles that share no identity, which is either an
+older record it cannot match or a genuinely separate requisition, and only a
+reader can tell which.
 
 Then resolve the apply route, following the "Resolving the apply route"
 section of that same document. Where the lead sits on a board or an
@@ -404,6 +453,11 @@ const verdictSets = await parallel(chunks.map((c, i) => () =>
   agent(verifyPrompt(c), { label: `verify:${i + 1}/${chunks.length}`, phase: 'Verify', model: 'sonnet', schema: VERDICTS_SCHEMA })))
 const verdictByUrl = new Map()
 for (const set of verdictSets.filter(Boolean)) for (const v of set.verdicts) verdictByUrl.set(v.url, v)
+// What actually reached disk, reported rather than assumed: a verifier can be
+// refused the page, and a spec that was never saved is a record the next step
+// has to write from the verdict alone.
+const specsSaved = [...verdictByUrl.values()].filter((v) => v.specPath).length
+log(`${specsSaved} of ${verdictByUrl.size} verified postings saved under ${applicationsDir}`)
 
 // ISO dates compare correctly as strings, so no Date construction is needed.
 const dropReason = (v) => {
