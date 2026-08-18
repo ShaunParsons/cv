@@ -173,8 +173,11 @@ for (const l of leads) {
   const reason = dropReason(v)
   if (reason) {
     dropped[reason] = (dropped[reason] ?? 0) + 1
-    const entry = { ...l, ...(v ?? {}), dropReason: reason }
-    if (reason === 'unconfirmed') unconfirmed.push(entry)
+    const entry = { ...l, ...(v ?? {}), dropReason: reason, dropStage: 'verification' }
+    // `unverified` means no verdict came back for this lead at all, which is
+    // the same position as `unconfirmed`: nothing was settled either way, so
+    // it is not a filter decision and must not be recorded as one.
+    if (reason === 'unconfirmed' || reason === 'unverified') unconfirmed.push(entry)
     else droppedLeads.push(entry)
     continue
   }

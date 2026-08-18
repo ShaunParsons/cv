@@ -50,7 +50,9 @@ When a role's bullets run over the page break, the render repeats the role headi
 
 ## Finding something to apply for
 
-`/find-jobs [target role] [window]` runs before everything else and feeds nothing. It sweeps the open market and the hidden one - job boards, ATS-hosted careers pages, funding announcements, who-is-hiring threads - for live roles matching the record, and ranks them by how likely each is to reach a first interview, on the base rates `/assess-fit` uses. It finds, filters and ranks; scoring a lead in depth is `/assess-fit`, which each one should be handed on to.
+`/find-jobs [target role] [window]` runs before everything else and feeds nothing. It sweeps the open market and the hidden one - job boards, ATS-hosted careers pages, funding announcements, who-is-hiring threads - for live roles matching the record, and ranks them by how likely each is to reach a first interview, on the base rates `/assess-fit` uses. That ranking is the cheap pass: it decides which leads get assessed and in what order, and then the sweep runs `/assess-fit` against every survivor and triages each on what comes back.
+
+**The triage is a threshold on one number.** The first of the four estimates is the first-stage interview - the CV screen, the only gate every application meets - and the midpoint of its range sets the record's `status`: above 15% is `shortlisted` and worth an application, below 5% is `filtered` and not applied for, and everything between the two stays `found` at `stage: assessed` for a decision by hand. Both boundaries fall in that middle band, which is the one group the skill will not settle on its own authority. Leads the sweep's own filters dropped are never assessed - a full funnel written for a role ruled out on its stack is spend with no decision behind it.
 
 **What it writes goes to `applications/`, which is gitignored** - a lead list names companies not yet applied to and carries salary figures, and both stay out of the committed repo. Every lead gets a record there, the ones the filters dropped included, which is also what stops the next sweep surfacing the same role again. Its standing filters live outside the skill - the stack filter in memory, the salary floor in `.env` - and pass to the sweep as runtime arguments. So do its two standing lists: `RECRUITERS.md`, the vetted agency boards, and `COMPANIES.md`, the employers the sweep asks directly rather than waiting on a search to surface. Both sit beside `SWEEP.md`, both are gitignored - who is being asked to place me and who I want to work for are not public facts - and each has a committed `.example.md` beside it carrying placeholders only, on the same mechanism as `.env.example`.
 
@@ -58,7 +60,7 @@ When a role's bullets run over the page break, the render repeats the role headi
 
 `/assess-fit [job spec]` runs before either build step and feeds neither. It holds one spec against `roles/*.md` and reports which requirements are met with evidence, which are not, how far through the process the application is likely to get, and what the offer would be worth. It reads the same sources as `/generate-cv` via the same `scripts/fetch_spec.py`, so the two see an identical spec.
 
-**It writes nothing to disk itself.** The assessment names requirements that aren't met and carries salary figures, and both are barred from the committed repo - see Conventions below. It lives in the conversation, and what survives it goes into an application record by hand, not into a report file the skill writes.
+**It writes no report file.** The assessment names requirements that aren't met and carries salary figures, and both are barred from the committed repo - see Conventions below. Called on its own it lives in the conversation, and what survives it goes into an application record by hand. Called by `/find-jobs` as part of the sweep it writes into the lead's own record - `## Assessment` and `assessed:`, inside gitignored `applications/` - because the triage above needs a number the next sweep can read back. Either way there is no assessment document anywhere else, and never one in the committed repo.
 
 ## Tracking applications
 
@@ -67,7 +69,8 @@ When a role's bullets run over the page break, the render repeats the role headi
 ```
 applications/montu-uk-tech-lead/
   application.md                          # the record - frontmatter over prose sections
-  spec.txt                                # the raw fetched spec, where fetch_spec.py wrote one
+  spec.txt                                # the raw fetched spec - written by the sweep as it verifies
+                                          # a lead, or by fetch_spec.py on the way to a CV
   CV-Shaun-Parsons-Montu-2026-08-01.pdf   # the CV that was actually sent
   covering-letter.md                      # and any letter or application answers with it
 ```
@@ -84,8 +87,8 @@ The three skills write here, each at its own point in the funnel, and each write
 
 | Skill | Writes |
 |---|---|
-| `/find-jobs` | a directory per lead, `status: found` or `filtered`, with the listing and the reason |
-| `/assess-fit` | the `## Assessment` section, and `assessed:` |
+| `/find-jobs` | a directory per lead with the listing and the reason, then the triage on its assessment: `shortlisted`, `filtered`, or `found` at `stage: assessed` awaiting a decision |
+| `/assess-fit` | the `## Assessment` section, and `assessed:` - written by the sweep for every survivor, and again on its own for a lead handed to it directly |
 | `/generate-cv` | nothing on its own - filing happens after the render, below |
 
 **Artefacts move out of `dist/` when an application goes out.** `dist/` is build output and `make clean` empties it, so the CV that was actually sent cannot live there - the next `/generate-cv` overwrites `cv.md` and the next render replaces the PDF. `scripts/file_application.py` does the move, and the skills call it rather than moving files by hand:

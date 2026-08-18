@@ -170,6 +170,13 @@ The brief:
 - Stack keywords: ${brief.stackKeywords.join(', ')}
 - Seniority band: ${brief.band}
 - Posting window: ${windowLabel}, i.e. posted on or after ${sinceDate}. Today is ${today}.
+${(input.alreadySeen ?? []).length ? `
+Already recorded - do not return these, they are not new leads. Each line is
+a company and a role already held on file, whatever became of it:
+${(input.alreadySeen ?? []).map((s) => `  ${s}`).join('\n')}
+A different vacancy at one of these companies IS a new lead - match on the
+role as well as the company, not on the company alone.
+` : ''}
 
 Use WebSearch and WebFetch - load them via ToolSearch first if they are not
 already available. Where a page WebFetch cannot read (a 403, a hung
@@ -338,6 +345,18 @@ for (const l of raw) {
   if (!seen) byKey.set(k, { ...l, alsoVia: [] })
   else if (l.source !== seen.source && !seen.alsoVia.includes(l.source)) seen.alsoVia.push(l.source)
 }
+// A role already recorded is not a new lead. The searchers are told the list
+// below, but an instruction seven agents may each read differently is not a
+// filter, so the decision is taken here on the same normalisation the dedupe
+// uses. Dropped leads go nowhere: a record already exists for every one of
+// them, which is the whole point of holding the list.
+const seenKeys = new Set((input.alreadySeen ?? []).map((s) => dedupeKey(
+  { company: String(s).split('|')[0] ?? '', title: String(s).split('|')[1] ?? '' })))
+const beforeSeen = byKey.size
+for (const [k] of byKey) if (seenKeys.has(k)) byKey.delete(k)
+const seenDropped = beforeSeen - byKey.size
+if (seenDropped) log(`${seenDropped} leads already recorded in applications/ - dropped before verification`)
+
 const deduped = [...byKey.values()]
 
 // The title gate, applied once to every lead whatever modality found it. The
@@ -386,12 +405,17 @@ array rather than grading by hand.`,
 const gradeByTitle = new Map((graded?.grades ?? []).map((g) => [g.title, g]))
 const titleDrops = { band: 0, excluded: 0 }
 const gated = []
+// Dropped leads are returned, not just counted. A count tells the report how
+// well the queries aimed; only the lead itself lets step 5 write the record
+// that stops the next sweep paying to find the same role again.
+const droppedLeads = []
 for (const l of deduped) {
   const g = gradeByTitle.get(l.title)
   // No verdict means the gate could not be run. Keep the lead: an unread gate
   // is not a fail, and verification is the backstop.
   if (g && (g.reason === 'band' || g.reason === 'excluded')) {
     titleDrops[g.reason]++
+    droppedLeads.push({ ...l, dropReason: g.reason, dropStage: 'title' })
     continue
   }
   // A `discipline` verdict means the title named no software surface either
@@ -481,20 +505,30 @@ for (const l of toVerify) {
   const reason = dropReason(v)
   if (reason) {
     dropped[reason] = (dropped[reason] ?? 0) + 1
-    if (reason === 'unconfirmed') unconfirmed.push({ ...l, ...v })
+    const entry = { ...l, ...(v ?? {}), dropReason: reason, dropStage: 'verification' }
+    // `unverified` means no verdict came back for this lead at all, which is
+    // the same position as `unconfirmed`: nothing was settled either way, so
+    // it is not a filter decision and must not be recorded as one.
+    if (reason === 'unconfirmed' || reason === 'unverified') unconfirmed.push(entry)
+    else droppedLeads.push(entry)
     continue
   }
   shortlist.push({ ...l, ...v })
 }
-log(`${shortlist.length} leads survive verification (${unconfirmed.length} unconfirmed)`)
+log(`${shortlist.length} leads survive verification (${droppedLeads.length} dropped by a filter, ${unconfirmed.length} unconfirmed)`)
 
 return {
   shortlist,
   unconfirmed,
   speculative,
   unverifiedOverflow,
+  // Every lead a filter dropped, carrying the filter that did it. `dropStage`
+  // says which stage decided: a `verification` lead was fetched and read, so
+  // its record can carry the posting; a `title` lead never was, so its record
+  // carries the title and the URL and nothing invented beyond them.
+  droppedLeads,
   // `dropped` counts what verification threw out; `titleDropped` counts what
   // never reached it. The report reconciles across both, so a lead dropped on
   // its title is as visible as one dropped on its spec.
-  stats: { raw: raw.length, perModality, deduped: deduped.length, titleDropped: titleDrops, dropped },
+  stats: { raw: raw.length, perModality, deduped: deduped.length, seenDropped, titleDropped: titleDrops, dropped },
 }

@@ -3,7 +3,9 @@ company: <Company name>
 role: <Job title, as advertised>
 status: found            # found | filtered | shortlisted | applied | screening | interviewing | offer | rejected | withdrawn | no-response
 stage: found             # furthest point reached: found | assessed | applied | recruiter-screen | first-interview | technical | final | offer
-filtered: <the standing filter that dropped it, where status is filtered - stack, salary floor, location>
+filtered: <why it was dropped, where status is filtered - a standing filter (stack, salary
+          floor, location), or the assessment triage, as "assessment - first-stage midpoint
+          N%, below the 5% floor">
 route: cold              # cold | recruiter | referral | inbound | agency
 source: <where the lead came from - the board, the ATS, the sweep modality, the recruiter's name>
 salary: <as advertised, or "not stated">
@@ -32,7 +34,12 @@ Where a fetch produced one, `spec.txt` beside this file is the raw copy.>
 <The /assess-fit output in short: the four estimates with their reasoning, the
 hard filters, what was met and what was not, and the one thing that would have
 moved it. Where it was assessed more than once, keep the last pass and say what
-moved between them.>
+moved between them.
+
+The midpoint of the first estimate - the first-stage interview - sets `status`:
+above 15% shortlisted, below 5% filtered, and anything between the two stays
+`found` at `stage: assessed` until the user decides. Both boundaries fall in the
+middle band.>
 
 ## Materials sent
 
