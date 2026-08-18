@@ -2,7 +2,7 @@ export const meta = {
   name: 'find-jobs-sweep',
   description: 'Fan out seven job-search modalities, dedupe, verify each lead, apply the standing filters',
   phases: [
-    { title: 'Sweep', detail: 'one searcher per modality', model: 'sonnet' },
+    { title: 'Sweep', detail: 'one searcher per modality, and one per 20-company slice of the target list', model: 'sonnet' },
     { title: 'Verify', detail: 'verifiers over the deduped leads', model: 'sonnet' },
   ],
 }
@@ -128,16 +128,25 @@ const MODALITIES = [
 // Modality 7's list runs to hundreds of companies, so its boards are fetched
 // and gated in plain code rather than one at a time by the agent - the same
 // split as everywhere else here: arithmetic in a script, reading in an agent.
-const companiesCommand = `node ${companiesScript} --companies ${companiesDoc} \\
+//
+// The script half is fast whatever the list's length; the agent half is not,
+// and it is the one that decides how long this modality takes. So the list is
+// cut into slices and a searcher takes one each, which turns the modality's
+// reading from serial into parallel and keeps any one searcher's context to a
+// share of the postings rather than all of them.
+const COMPANY_CHUNK = 20
+const companiesCommand = (offset, limit) => `node ${companiesScript} --companies ${companiesDoc} \\
+    --offset ${offset} --limit ${limit} \\
     --exclude "${csv(excludeTerms)}" --since ${sinceDate} \\
     --locations "${csv(brief.locationTerms ?? [])}" \\
     --not-locations "${csv(notLocations)}"`
 
-const searchPrompt = (m) => `You are one searcher in a fanned-out job sweep. ${MODALITIES.length} searchers run in
-parallel, each on a different modality; yours is Modality ${m.n} (${m.name}).
+const searchPrompt = (m) => `You are one searcher in a fanned-out job sweep. Several searchers run in
+parallel, each on a different modality or a different slice of one; yours is
+Modality ${m.n} (${m.name})${m.chunkLabel ? `, slice ${m.chunkLabel}` : ''}.
 
 Read ${sweepDoc} and follow its preamble plus ONLY the "Modality ${m.n}" section.
-${m.doc && !m.script ? `\nYour modality works from a standing list, held outside the repo at\n  ${m.doc}\nRead it with the Read tool before you search. Where the file is missing or\nholds no entries, say so plainly in your notes and follow what your modality\nsection says to do about it - never substitute entries of your own.\n` : ''}${m.script ? `\nYour modality works from a standing list of companies, held outside the repo\nat\n  ${m.doc}\nIt runs to hundreds of entries, so do NOT read it and fetch the boards one by\none - you would run out of context long before the end of it. Run this first,\nwith Bash:\n\n  ${companiesCommand}\n\nIt reads every board on the list, discards the postings whose titles are out\nof band, name something ruled out, or sit outside the location scope, and\nprints what is left as JSON. That is your candidate set, and it is the whole\nlist's answer rather than a sample of it.\n\nThen do the reading the script cannot. Hold each match against the brief, and\nfetch the posting where the title alone does not settle it - every match\ncarries a \`match\` of \`strong\` or \`ambiguous\`, and the ambiguous ones are\nexactly the ones a fetch is for. Work the strong ones first.\n\nThree fields in its output are yours to act on, not to ignore:\n- \`needAgent\` lists companies whose row carries a careers page rather than an\n  API. The script cannot read those; you can. Fetch each one.\n- \`failed\` lists boards that errored. Report them in your notes.\n- \`note\` appears when the list is missing entirely, and means this modality\n  returns nothing. Say so - never substitute companies of your own.\n` : ''}
+${m.doc && !m.script ? `\nYour modality works from a standing list, held outside the repo at\n  ${m.doc}\nRead it with the Read tool before you search. Where the file is missing or\nholds no entries, say so plainly in your notes and follow what your modality\nsection says to do about it - never substitute entries of your own.\n` : ''}${m.script ? `\nYour modality works from a standing list of companies, held outside the repo\nat\n  ${m.doc}\nThe list is long, and it has been cut into slices so that several searchers\ncan work it at once. **Yours is slice ${m.chunkLabel}: the ${m.limit} companies at\noffset ${m.offset}.** Do NOT read the list yourself and do NOT widen your slice -\nanother searcher holds every company outside it, and reading them again is\nduplicated work that the dedupe will only throw away. Run this first, with\nBash:\n\n  ${companiesCommand(m.offset, m.limit)}\n\nIt reads your slice's boards, discards the postings whose titles are out of\nband, name something ruled out, or sit outside the location scope, and prints\nwhat is left as JSON. That is your candidate set, and it is your slice's whole\nanswer rather than a sample of it. Its \`totalCompanies\` names the length of the\nfull list, so do not read a small \`companies\` count as a short list - it is\nyour share of a long one.\n\nThen do the reading the script cannot. Hold each match against the brief, and\nfetch the posting where the title alone does not settle it - every match\ncarries a \`match\` of \`strong\` or \`ambiguous\`, and the ambiguous ones are\nexactly the ones a fetch is for. Work the strong ones first. Your slice is\nsmall enough to work through to the end; do so rather than stopping early.\n\nThree fields in its output are yours to act on, not to ignore:\n- \`needAgent\` lists companies in your slice whose row carries a careers page\n  rather than an API. The script cannot read those; you can. Fetch each one.\n- \`failed\` lists boards that errored. Report them in your notes.\n- \`note\` appears when the list is missing entirely, and means this modality\n  returns nothing. Say so - never substitute companies of your own.\n` : ''}
 
 The brief:
 - Titles: ${brief.titles.join('; ')} - and their common synonyms
@@ -209,14 +218,62 @@ Leads:
 ${JSON.stringify(chunk, null, 2)}`
 
 phase('Sweep')
-const sweeps = await parallel(MODALITIES.map((m) => () =>
-  agent(searchPrompt(m), { label: `sweep:${m.key}`, phase: 'Sweep', model: 'sonnet', schema: LEADS_SCHEMA })))
+
+// How many slices the company list needs is a fact about a gitignored file, so
+// it is read rather than assumed - and read through an agent, because this
+// script runs in the workflow sandbox and has no filesystem of its own. The
+// agent runs one command and relays a number; nothing here is its judgement.
+const COUNT_SCHEMA = {
+  type: 'object',
+  required: ['totalCompanies'],
+  properties: { totalCompanies: { type: 'number' } },
+}
+const companiesModality = MODALITIES.find((m) => m.script)
+const counted = companiesModality
+  ? await agent(`Run exactly this command with Bash and return the number it prints:
+
+  node ${companiesScript} --companies ${companiesDoc} --count
+
+It prints JSON of the form {"totalCompanies": N}. Return that N unchanged. Do
+not read the companies file yourself and do not estimate: if the command fails
+or prints nothing, return 0.`,
+      { label: 'count:companies', phase: 'Sweep', model: 'sonnet', effort: 'low', schema: COUNT_SCHEMA })
+  : null
+const totalCompanies = counted?.totalCompanies ?? 0
+
+// One searcher per modality, except the company modality, which gets one per
+// slice. Every slice keeps the modality's own key: the round-robin below
+// spends the verification cap per modality, and eleven slices claiming a share
+// each would take eleven shares of a budget meant for one - which is the exact
+// failure the round-robin exists to prevent.
+const searchers = MODALITIES.filter((m) => !m.script).map((m) => ({ ...m, label: m.key }))
+const companyChunks = []
+for (let offset = 0; offset < totalCompanies; offset += COMPANY_CHUNK) {
+  companyChunks.push({ offset, limit: Math.min(COMPANY_CHUNK, totalCompanies - offset) })
+}
+for (const [i, c] of companyChunks.entries()) {
+  searchers.push({
+    ...companiesModality,
+    ...c,
+    chunkLabel: `${i + 1} of ${companyChunks.length}`,
+    label: `${companiesModality.key}:${i + 1}/${companyChunks.length}`,
+  })
+}
+if (companyChunks.length) {
+  log(`${totalCompanies} target companies in ${companyChunks.length} slices of up to ${COMPANY_CHUNK}, one searcher each`)
+}
+
+const sweeps = await parallel(searchers.map((m) => () =>
+  agent(searchPrompt(m), { label: `sweep:${m.label}`, phase: 'Sweep', model: 'sonnet', schema: LEADS_SCHEMA })))
 // Barrier justified: the dedupe needs every searcher's results together.
 // Tag each lead with the searcher that found it. The dedupe folds duplicates
 // across modalities and the cap below spends its budget across them, so which
 // one produced a lead has to survive the flatten.
-const raw = sweeps.flatMap((r, i) => (r?.leads ?? []).map((l) => ({ ...l, modality: MODALITIES[i].key })))
-const perModality = Object.fromEntries(MODALITIES.map((m, i) => [m.key, sweeps[i]?.leads.length ?? 0]))
+const raw = sweeps.flatMap((r, i) => (r?.leads ?? []).map((l) => ({ ...l, modality: searchers[i].key })))
+// Counted by modality rather than by searcher, so the company slices report as
+// the one modality they are and the figure stays comparable across runs.
+const perModality = Object.fromEntries(MODALITIES.map((m) => [m.key, 0]))
+for (const [i, r] of sweeps.entries()) perModality[searchers[i].key] += r?.leads?.length ?? 0
 
 // Dedupe on normalised company + title - the same role surfacing through
 // several modalities is one vacancy, and the extra sightings are a signal.

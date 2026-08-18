@@ -18,10 +18,23 @@
 //
 //   node companies.mjs --companies <path to COMPANIES.md> \
 //                      [--exclude "term,term"] [--since YYYY-MM-DD] \
-//                      [--locations "united kingdom,remote"] [--all]
+//                      [--locations "united kingdom,remote"] [--all] \
+//                      [--offset N] [--limit N] [--count]
 //
 // Prints JSON on stdout: the matches, the companies that need an agent
 // because they carry no API, and the failures. Everything it drops it counts.
+//
+// `--offset` and `--limit` take a contiguous slice of the list, so the caller
+// can hand one slice to each of several agents rather than the whole list to
+// one. The script was always cheap enough to run whole - fetching two hundred
+// endpoints at a concurrency of eight is seconds - but what follows it is not:
+// the agent then reads every match, fetches the ambiguous ones, and holds each
+// against the brief, and that is the part that runs long and exhausts a
+// context. Slicing moves the whole modality from one agent's serial reading to
+// several agents reading in parallel.
+//
+// `--count` prints the number of companies on the list and nothing else, so a
+// caller can size its own fan-out without parsing the list itself.
 
 import { readFile } from 'node:fs/promises'
 import { gradeTitle, excludeMatcher } from './title_filter.mjs'
@@ -201,6 +214,8 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     process.exit(2)
   }
 
+  const countOnly = argv.includes('--count')
+
   let md
   try {
     md = await readFile(list, 'utf8')
@@ -208,15 +223,31 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     // A missing list is the documented case, not an error: Modality 7 has no
     // generic fallback, and says so rather than inventing companies.
     console.log(JSON.stringify({
-      companies: 0, matches: [], needAgent: [], failed: [],
+      companies: 0, totalCompanies: 0, matches: [], needAgent: [], failed: [],
       note: `no companies file at ${list} - Modality 7 has nothing to ask and returns nothing`,
     }, null, 2))
     process.exit(0)
   }
 
   const entries = parseCompanies(md)
-  const withApi = entries.filter((e) => e.url && adapterFor(e.url))
-  const needAgent = entries.filter((e) => !e.url || !adapterFor(e.url))
+
+  // Sizing a fan-out needs the count and nothing else, and a caller that has
+  // to parse the list to learn it is a second parser of the same file.
+  if (countOnly) {
+    console.log(JSON.stringify({ totalCompanies: entries.length }, null, 2))
+    process.exit(0)
+  }
+
+  // The slice is taken over the parsed list in its own order, before the API
+  // and careers-page entries are told apart, so consecutive offsets tile the
+  // list exactly once with no company read twice and none skipped.
+  const offset = Math.max(0, Number(arg('offset', 0)) || 0)
+  const limitArg = arg('limit')
+  const limit = limitArg == null ? entries.length : Math.max(0, Number(limitArg) || 0)
+  const slice = entries.slice(offset, offset + limit)
+
+  const withApi = slice.filter((e) => e.url && adapterFor(e.url))
+  const needAgent = slice.filter((e) => !e.url || !adapterFor(e.url))
 
   const boards = await pool(withApi, fetchBoard)
   const ok = boards.filter((b) => b.postings)
@@ -232,7 +263,12 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   })
 
   console.log(JSON.stringify({
-    companies: entries.length,
+    companies: slice.length,
+    // The whole list's size, and where this slice sat in it. A caller holding
+    // one slice cannot otherwise tell a short answer from a short share.
+    totalCompanies: entries.length,
+    offset,
+    limit: limitArg == null ? null : limit,
     asked: withApi.length,
     reachable: ok.length,
     postingsSeen: seen,
